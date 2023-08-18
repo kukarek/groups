@@ -63,10 +63,65 @@ async def on_help(message: Message):
 @dp.message_handler()
 async def echo(message: Message):
     """
-    Обработчик всех остальных сообщений.
-    Просто повторяет сообщение обратно.
+    принимает команду накрутки по ключевым словам 
+    может устанавливать отдельные состояния накрутки
+
     """
-    await message.answer(f"Вы написали: {message.text}")
+    cycle = 0
+    VK = True
+    TG = True
+
+    text = message.text
+    
+    try:
+     if text.find("stop_wrapping") != -1:
+        wrapping.States.stop = True
+        await message.answer("Остановка накрутки")
+
+     elif text.find("start_wrapping") != -1:
+        
+        if text.find("cycle") != -1:
+            ss =  s.split('cycle=')[1]
+            sss = ss.split(' ')[0]
+            cycle = int(sss)
+        
+        if text.find("VK") != -1:
+            ss =  s.split('VK=')[1]
+            sss = ss.split(' ')[0]
+            if sss == "False":
+               VK = False    
+
+        if text.find("TG") != -1:
+            ss =  s.split('TG=')[1]
+            sss = ss.split(' ')[0]
+            if sss == "False":
+               TG = False
+        wrapping.start_wrapping(cycle=cycle,VK=VK,TG=TG)
+        await message.answer(f"Зпуск накрутки: cycle={cycle}, VK={VK}, TG={TG}")
+
+     elif text.find("VK") != -1 or text.find("TG") != -1: #меняет статус накрутки тг и вк
+        
+        if text.find("VK") != -1:
+            ss =  s.split('VK=')[1]
+            sss = ss.split(' ')[0]
+            if sss == "False":
+               VK = False   
+
+        if text.find("TG") != -1:
+            ss =  s.split('TG=')[1]
+            sss = ss.split(' ')[0]
+            if sss == "False":
+               TG = False
+
+        wrapping.States.VK = VK
+        wrapping.States.TG = VK
+        await message.answer(f"Установка параметров: VK={VK}, TG={TG}")
+
+     else:
+        await message.answer(f"Вы написали: {message.text}")
+
+    except: 
+        await message.answer("Что-то пошло не так :( ")
 
 def main():
     # Запуск бота
