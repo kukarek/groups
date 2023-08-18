@@ -1,7 +1,7 @@
 import logging
 from aiogram import Bot, Dispatcher, executor
 from aiogram.types import Message
-import parservk
+import vk_top
 import threading
 import wrapping
 
@@ -33,8 +33,8 @@ async def on_start(message: Message):
 @dp.message_handler(commands=['get_top'])
 async def on_start(message: Message):
    
-    topchlb = parservk.Get_top(url = url_chlb, group_id = group_id_chlb)
-    topkzn = parservk.Get_top(url = url_kzn, group_id = group_id_kzn)
+    topchlb = vk_top.Get_top(url = url_chlb, group_id = group_id_chlb)
+    topkzn = vk_top.Get_top(url = url_kzn, group_id = group_id_kzn)
 
     await message.answer(f"Место в топе по Челябинску: {topchlb}\n"
                          f"Место в топе по Казани: {topkzn}")
