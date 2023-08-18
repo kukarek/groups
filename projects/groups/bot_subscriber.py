@@ -5,25 +5,28 @@ import sqlite3
 import random
 
 
-def create_keyboard():
+def create_start_keyboard():
     # Создаем клавиатуру
-    keyboard = VkKeyboard(one_time=True)
+    keyboard_start = VkKeyboard(one_time=True)
 
     # Добавляем кнопки
-    keyboard.add_button('Хорошо, спасибо!', color=VkKeyboardColor.POSITIVE)
-    keyboard.add_button('Давай попробуем', color=VkKeyboardColor.POSITIVE)
-    keyboard.add_line()  # Переход на вторую строку
-    keyboard.add_button('Отменить подписку', color=VkKeyboardColor.NEGATIVE)
+    keyboard_start.add_button('Хочу разместить вакансию', color=VkKeyboardColor.POSITIVE)
+    keyboard_start.add_button('Ищу работу', color=VkKeyboardColor.POSITIVE)
 
-    return keyboard.get_keyboard()
+    return keyboard_start.get_keyboard()
 
-def send_text_message_with_keyboard(vk, user_id, message, keyboard):
-    try:
-        random_id = random.randint(1, 10**9)
-        vk.messages.send(user_id=user_id, message=message, random_id=random_id, keyboard=keyboard)
-        print("Текстовое сообщение успешно отправлено!")
-    except vk_api.VkApiError as e:
-        print(f"Ошибка при отправке текстового сообщения: {e}")
+def create_applicant_keyboard():
+    # Создаем клавиатуру
+    keyboard_applicant = VkKeyboard()
+
+    # Добавляем кнопки
+    keyboard_applicant.add_button('Редактировать ключевые слова', color=VkKeyboardColor.POSITIVE)
+    keyboard_applicant.add_button('Просмотреть ключевые слова', color=VkKeyboardColor.POSITIVE)
+    keyboard_applicant.add_button('Пример ключевых слов', color=VkKeyboardColor.POSITIVE)
+    keyboard_applicant.add_button('Отменить подписку', color=VkKeyboardColor.NEGATIVE)
+
+    return keyboard_applicant.get_keyboard()
+
 
 def create_connection():
     connection = sqlite3.connect('subscriptions.db')
@@ -32,10 +35,6 @@ def create_connection():
     # Создаем таблицу для хранения подписок пользователей, если она не существует
     cursor.execute('''CREATE TABLE IF NOT EXISTS subscriptions
                       (user_id INTEGER PRIMARY KEY, keywords TEXT)''')
-
-    # Создаем таблицу для хранения последнего ID поста, если она не существует
-    cursor.execute('''CREATE TABLE IF NOT EXISTS last_post_id
-                      (group_id TEXT PRIMARY KEY, post_id INTEGER)''')
 
     connection.commit()
     return connection
@@ -51,87 +50,13 @@ def get_subscription(connection, user_id):
     result = cursor.fetchone()
     return result[0] if result else None
 
-def send_text_message(vk, user_id, message):
-    try:
-        random_id = random.randint(1, 10**9)
-        vk.messages.send(user_id=user_id, message=message, random_id=random_id)
-        print("Текстовое сообщение успешно отправлено!")
-    except vk_api.VkApiError as e:
-        print(f"Ошибка при отправке текстового сообщения: {e}")
-
-def send_wall_post_to_subscribers(connection, vk, group_id, post_id):
-    cursor = connection.cursor()
-    cursor.execute('SELECT user_id, keywords FROM subscriptions')
-    subscribers = cursor.fetchall()
-
-    for subscriber in subscribers:
-        user_id, keywords = subscriber
-        if keywords:
-            # Проверяем, соответствует ли пост ключевым словам подписчика
-            post = vk.wall.getById(posts=f"{group_id}_{post_id}", extended=1)
-            post_text = post[0]['text']
-            if any(keyword.lower() in post_text.lower() for keyword in keywords.split(',')):
-                # Пересылаем пост подписчику, если есть соответствие
-                try:
-                    random_id = random.randint(1, 10**9)
-                    vk.messages.send(user_id=user_id, forward_messages=post_id, random_id=random_id)
-                    print(f"Пост переслан подписчику {user_id}")
-                except vk_api.VkApiError as e:
-                    print(f"Ошибка при пересылке поста пользователю {user_id}: {e}")
-
-    # Обновляем последний ID поста в базе данных
-    set_last_post_id(connection, group_id, post_id)
-
-    for subscriber in subscribers:
-        user_id, keywords = subscriber
-        if keywords:
-            # Проверяем, соответствует ли пост ключевым словам подписчика
-            try:
-                code = f'''
-                    var post = API.wall.getById({{"posts": "{group_id}_{post_id}"}})[0];
-                    var post_text = post.text;
-                    return post_text;
-                '''
-
-                response = vk.execute(code)
-
-                post_text = response['response']
-
-                # Преобразуем ключевые слова в список, разделенный запятыми
-                keyword_list = [keyword.strip().lower() for keyword in keywords.split(',')]
-            
-                if any(keyword in post_text.lower() for keyword in keyword_list):
-                    # Пересылаем пост подписчику, если есть соответствие
-                    try:
-                        attachments = f"wall{group_id}_{post_id}"
-                        random_id = vk_api.utils.get_random_id()
-                        vk.messages.send(user_id=user_id, attachment=attachments, random_id=random_id)
-                        print(f"Запись со стены переслана подписчику {user_id}")
-                    except vk_api.VkApiError as e:
-                        print(f"Ошибка при пересылке записи со стены пользователю {user_id}: {e}")
-            except vk_api.VkApiError as e:
-                print(f"Ошибка при получении информации о посте со стены: {e}")
-
-    # Обновляем последний ID поста в базе данных
-    set_last_post_id(connection, group_id, post_id)
-
-# Остальные функции остаются без изменений
 
 
 
 
 
-def get_last_post_id(connection, group_id):
-    cursor = connection.cursor()
-    cursor.execute('SELECT post_id FROM last_post_id WHERE group_id = ?', (group_id,))
-    result = cursor.fetchone()
-    return result[0] if result else 0  # Возвращаем 0, если пост с последним ID не найден
 
 
-def set_last_post_id(connection, group_id, post_id):
-    cursor = connection.cursor()
-    cursor.execute('INSERT OR REPLACE INTO last_post_id (group_id, post_id) VALUES (?, ?)', (group_id, post_id))
-    connection.commit()
 
 def main():
     connection = create_connection()
