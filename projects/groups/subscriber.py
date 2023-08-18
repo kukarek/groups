@@ -3,12 +3,7 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 import sqlite3
 import random
-"""
-библиотека создана для того, чтобы обрабатывать входящие сообщения по user_id, status и message.text
-status тянет из локальной бд 
-здесь происходит все взамодействие с бд 
-принимает сообщение, определяет по статусу переписки ответ, возвращает ответ и id получателя
-"""
+
 
 def create_start_keyboard():
     # Создаем клавиатуру
