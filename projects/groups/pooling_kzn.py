@@ -6,6 +6,7 @@ import time
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
+import subscriber
 
 
 # Укажите токен VK бота и Telegram бота
@@ -51,7 +52,23 @@ async def send_telegram(image, caption):
     await bot.close()
 
 
+def send_telegram(event):
+   
+    message = event.object.text
+    if len(message) < 4000:
+      if len(message) < 1000:
 
+       attachments = event.object.attachments
+
+       if attachments and "photo" in attachments[0]:
+        # Если в записи есть изображения, получаем ссылку на изображение
+        photo_url = attachments[0]["photo"]["sizes"][-1]["url"]
+        asyncio.run(send_telegram(image=photo_url, caption=message))
+       else:
+        # Если в записи нет изображений, отправляем только текст
+        asyncio.run(send_telegram(image= "", caption=message))
+      else:
+       asyncio.run(send_telegram(image= "", caption=message))  
 
 def main():
     
@@ -71,24 +88,12 @@ def main():
              
             if event.type == VkBotEventType.MESSAGE_NEW:
                 content = event.message.text
+                
                 vk.messages.send(user_id=732405775, message=f"Новое сообщение! '{content}'", random_id=0)
 
             if event.type == VkBotEventType.WALL_POST_NEW:
-                message = event.object.text
-                if len(message) < 4000:
-                 if len(message) < 1000:
-
-                  attachments = event.object.attachments
-
-                  if attachments and "photo" in attachments[0]:
-                     # Если в записи есть изображения, получаем ссылку на изображение
-                     photo_url = attachments[0]["photo"]["sizes"][-1]["url"]
-                     asyncio.run(send_telegram(image=photo_url, caption=message))
-                  else:
-                     # Если в записи нет изображений, отправляем только текст
-                     asyncio.run(send_telegram(image= "", caption=message))
-                 else:
-                    asyncio.run(send_telegram(image= "", caption=message))
+                send_telegram(event=event)
+                
 
         except Exception as e:
             # В случае ошибки, печатаем ее и продолжаем прослушивание

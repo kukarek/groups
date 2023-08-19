@@ -4,9 +4,9 @@ from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 import sqlite3
 import random
 
-
+# Создаем клавиатуры
 def create_start_keyboard():
-    # Создаем клавиатуру
+    
     keyboard_start = VkKeyboard(one_time=True)
 
     # Добавляем кнопки
@@ -16,7 +16,7 @@ def create_start_keyboard():
     return keyboard_start.get_keyboard()
 
 def create_applicant_keyboard():
-    # Создаем клавиатуру
+    
     keyboard_applicant = VkKeyboard()
 
     # Добавляем кнопки
@@ -50,33 +50,75 @@ def get_subscription(connection, user_id):
     result = cursor.fetchone()
     return result[0] if result else None
 
+def search_users():
+    
+    print()
+
+def start_status_handler():
+    
+    print()
+
+def employer_status_handler():
+    
+    print()
+
+def editing_status_handler():
+    
+    print()    
+
+def post_handler(post): # хз как это работает, chatgpt наебенил
+
+    conn = sqlite3.connect('subscriptions.db')
+    cursor = conn.cursor()
+    
+    # Разделение ключевых слов на отдельные слова
+    keywords = [word.strip() for word in post.text.replace(',', ' ').split()]
+
+    # Создание временной таблицы для ключевых слов
+    cursor.execute("CREATE TEMP TABLE keywords (key_word TEXT);")
+    for keyword in keywords:
+        cursor.execute("INSERT INTO keywords (key_word) VALUES (?);", (keyword, ))
+    
+    # Запрос для поиска совпадений
+    find_matching_users_query = '''
+    SELECT DISTINCT user_id
+    FROM users
+    WHERE EXISTS (
+        SELECT 1
+        FROM keywords
+        WHERE INSTR(LOWER(users.key_word), LOWER(keywords.key_word)) > 0
+    );
+    '''
+
+    # Выполнение запроса
+    result = cursor.execute(find_matching_users_query).fetchall()
+
+    # Извлечение значений user_id из результата запроса
+    matching_users = [row[0] for row in result]
+    print("Пользователи с совпадениями:", matching_users)
+    # Закрытие подключения к базе данных
+    conn.close()
+
+    return matching_users
+
+
+def reply_message_handler(user_id, message_text):
+    conn = create_connection()
+    cursor = conn.cursor()
 
 
 
 
-
+    conn.commit()
+    conn.close()
+    cursor.close()
 
 
 
 def main():
-    connection = create_connection()
+    
 
-    # Вставьте ваш токен и ID группы ВКонтакте
-    vk_token = 'vk1.a.qpY3UvDhUjNx20an2VW7vC4C5KvcZ6sPIESA8EFjKHPjivnEriP9ToosXqvf_DfGgK_Qws9dA429c1GXFmdhDNlHUJfnIYe0yl-E1cl0uXf6a8XCUTcFFvMSaMSd9FAYIqM7GxiYfamEEwTFpjNuUoaK77P_0_fFpwhIeEl-rOf2FspO_XdHWJPilQk0BwZV4drYCsQaKRXnml0PtfwQrQ'
-    group_id = '221134261'
-
-    vk_session = vk_api.VkApi(token=vk_token)
-    vk = vk_session.get_api()
-    longpoll = VkBotLongPoll(vk_session, group_id)
-
-    keyboard = create_keyboard()
-
-    print("Бот запущен!")
-
-    for event in longpoll.listen():
-        if event.type == VkBotEventType.MESSAGE_NEW:
-            user_id = event.obj.message['from_id']
-            message = event.obj.message['text']
+   
 
             if "," in message:
                 keywords = [word.strip() for word in message.split(",")]

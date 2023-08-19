@@ -1,47 +1,40 @@
-
+import sqlite3
 
 def main(): #обработчик любого сообщения в тг боте
      
-     cycle = 0
-     VK = True
-     TG = True
-     
-     s = "start_wraping cycle=3 VK=False T=False"
+    conn = sqlite3.connect('subscriptions.db')
+    cursor = conn.cursor()
 
-     if s.find("start_wrapping") != -1:
-        
-        if s.find("cycle") != -1:
-            ss =  s.split('cycle=')[1]
-            sss = ss.split(' ')[0]
-            cycle = int(sss)
-        
-        if s.find("VK") != -1:
-            ss =  s.split('VK=')[1]
-            sss = ss.split(' ')[0]
-            if sss == "False":
-               VK = False    
+    your_text = "Путешествие – это уникальная пупа возможность уйти от повседневной рутины, лупа исследовать новые места и погрузиться в разнообразие культур и природных красот. Открывая перед собой неизведанные горизонты, мы встречаем удивительных людей, узнаем истории и традиции, которые делают каждое путешествие неповторимым."
 
-        if s.find("TG") != -1:
-            ss =  s.split('TG=')[1]
-            sss = ss.split(' ')[0]
-            if sss == "False":
-               TG = False
+    # Разделение ключевых слов на отдельные слова
+    keywords = [word.strip() for word in your_text.replace(',', ' ').split()]
 
-     if s.find("VK") != -1 or s.find("TG") != -1: #если что-то из этого нашел с строке
-        
-        if s.find("VK") != -1:
-            ss =  s.split('VK=')[1]
-            sss = ss.split(' ')[0]
-            if sss == "False":
-               VK = False   
+    # Создание временной таблицы для ключевых слов
+    cursor.execute("CREATE TEMP TABLE keywords (key_word TEXT);")
+    for keyword in keywords:
+        cursor.execute("INSERT INTO keywords (key_word) VALUES (?);", (keyword, ))
 
-        if s.find("TG") != -1:
-            ss =  s.split('TG=')[1]
-            sss = ss.split(' ')[0]
-            if sss == "False":
-               TG = False
+    # Запрос для поиска совпадений
+    find_matching_users_query = '''
+    SELECT DISTINCT user_id
+    FROM users
+    WHERE EXISTS (
+        SELECT 1
+        FROM keywords
+        WHERE INSTR(LOWER(users.key_word), LOWER(keywords.key_word)) > 0
+    );
+    '''
 
-     print(VK)
-     input()
+    # Выполнение запроса
+    result = cursor.execute(find_matching_users_query).fetchall()
+
+    # Извлечение значений user_id из результата запроса
+    matching_users = [row[0] for row in result]
+    print("Пользователи с совпадениями:", matching_users)
+    # Закрытие подключения к базе данных
+    conn.close()
+
+
 if __name__ == '__main__':
     main()

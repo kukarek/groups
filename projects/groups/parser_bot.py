@@ -5,6 +5,7 @@ import vk_top
 import threading
 import wrapping
 
+
 group_id_chlb = "220670949"
 url_chlb = "https://vk.com/search?c%5Bper_page%5D=40&c%5Bq%5D=%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D1%87%D0%B5%D0%BB%D1%8F%D0%B1%D0%B8%D0%BD%D1%81%D0%BA&c%5Bsection%5D=communities"
 
@@ -51,7 +52,13 @@ async def on_help(message: Message):
                          "Доступные команды:\n"
                          "/start - Начать общение с ботом\n"
                          "/help - Получить справку\n"
-                         "/get_top - получить номер в поиске")
+                         "/get_top - получить номер в поиске\n"
+                         "stop_wrapping\n"
+                         "start_wrapping\n"
+                         "cycle=0..27\n"
+                         "VK=bool\n"
+                         "TG=bool\n"
+                         "выражения пишуться через 1 пробел\n")
 
 @dp.message_handler(commands=['start_wrapping'])
 async def on_help(message: Message):
@@ -81,47 +88,52 @@ async def echo(message: Message):
      elif text.find("start_wrapping") != -1:
         
         if text.find("cycle") != -1:
-            ss =  s.split('cycle=')[1]
+            ss =  text.split('cycle=')[1]
             sss = ss.split(' ')[0]
             cycle = int(sss)
         
         if text.find("VK") != -1:
-            ss =  s.split('VK=')[1]
+            ss =  text.split('VK=')[1]
             sss = ss.split(' ')[0]
             if sss == "False":
                VK = False    
 
         if text.find("TG") != -1:
-            ss =  s.split('TG=')[1]
+            ss =  text.split('TG=')[1]
             sss = ss.split(' ')[0]
             if sss == "False":
                TG = False
-        wrapping.start_wrapping(cycle=cycle,VK=VK,TG=TG)
-        await message.answer(f"Зпуск накрутки: cycle={cycle}, VK={VK}, TG={TG}")
+
+        if wrapping.start_wrapping(cycle=cycle,VK=VK,TG=TG):
+           await message.answer(f"Запуск накрутки: cycle={cycle}, VK={VK}, TG={TG}")
+        else:
+           await message.answer("Накрутка уже запущена!")
 
      elif text.find("VK") != -1 or text.find("TG") != -1: #меняет статус накрутки тг и вк
         
         if text.find("VK") != -1:
-            ss =  s.split('VK=')[1]
+            ss =  text.split('VK=')[1]
             sss = ss.split(' ')[0]
             if sss == "False":
                VK = False   
+            await message.answer(f"Установка параметров: VK={VK}")
 
         if text.find("TG") != -1:
-            ss =  s.split('TG=')[1]
+            ss =  text.split('TG=')[1]
             sss = ss.split(' ')[0]
             if sss == "False":
                TG = False
+            await message.answer(f"Установка параметров: TG={TG}")
 
         wrapping.States.VK = VK
-        wrapping.States.TG = VK
-        await message.answer(f"Установка параметров: VK={VK}, TG={TG}")
+        wrapping.States.TG = TG
 
      else:
         await message.answer(f"Вы написали: {message.text}")
 
-    except: 
-        await message.answer("Что-то пошло не так :( ")
+    except Exception as e: 
+        await message.answer(e)
+
 
 def main():
     # Запуск бота
