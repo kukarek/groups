@@ -1,9 +1,10 @@
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
+from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 import asyncio
 import aiogram
 import time
-from aiogram import Bot, types
+from aiogram import Bot
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 import subscriber
@@ -52,7 +53,7 @@ async def send_telegram(image, caption):
     await bot.close()
 
 
-def send_telegram(event):
+def send_to_telegram(event):
    
     message = event.object.text
     if len(message) < 4000:
@@ -72,34 +73,46 @@ def send_telegram(event):
 
 def main():
     
-    
-
     while True:
         
         vk_session = vk_api.VkApi(token=VK_TOKEN)
         longpoll = VkBotLongPoll(vk_session, "22156807")  # Замените на ваш ID группы
         vk = vk_session.get_api()
-        
 
         print("соединение установлено- казань")
+
         try:
            
            for event in longpoll.listen():
              
             if event.type == VkBotEventType.MESSAGE_NEW:
-                content = event.message.text
+
+                reply, keybord, notify = subscriber.reply_message_handler(event=event)
+
+                if notify == True: #уведомление админа
+                   vk.messages.send(user_id=732405775, message=f"Новое сообщение! '{event.message.text}'", random_id=0)
+
+                if reply != None: #отправка ответа юзеру с клавиатурой, либо без нее
+                   if keybord != None:
+                      vk.messages.send(user_id=event.message.from_id, message=reply, random_id=0, keyboard=keybord)
+                   else:
+                      vk.messages.send(user_id=event.message.from_id, message=reply, random_id=0)   
                 
-                vk.messages.send(user_id=732405775, message=f"Новое сообщение! '{content}'", random_id=0)
 
             if event.type == VkBotEventType.WALL_POST_NEW:
-                send_telegram(event=event)
                 
+                send_to_telegram(event=event) #пересылка поста в телеграм канал
+                users = subscriber.post_handler(event.object) #тянем из бд список подписчиков, чьи слова совпадают 
+                
+                for user in users: #рассылаем пост
+                   vk.messages.send(user_id=user, message="Новый пост!", attachment=f"wall-22156807_{event.object.id}", random_id=0)
+
 
         except Exception as e:
             # В случае ошибки, печатаем ее и продолжаем прослушивание
             print("разрыв соединения - казань")
             print(f"Error: {e}")
-            time.sleep(1)  # Пауза перед попыткой подключения снова
+            time.sleep(5)  # Пауза перед попыткой подключения снова
      
 
 if __name__ == '__main__':
