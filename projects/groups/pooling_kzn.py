@@ -72,7 +72,6 @@ def send_to_telegram(event):
        asyncio.run(send_telegram(image= "", caption=message))  
 
 def main():
-    subscriber.create_connection()
     while True:
         
         vk_session = vk_api.VkApi(token=VK_TOKEN)

@@ -99,7 +99,7 @@ def main():
                 
              if event.type == VkBotEventType.WALL_POST_NEW:
                 #id группы = event.object.owner_id
-                send_to_telegram(event=event) #пересылка поста в телеграм канал
+                #send_to_telegram(event=event) #пересылка поста в телеграм канал
                 users = subscriber.post_handler(event.object) #тянем из бд список подписчиков, чьи слова совпадают 
                 
                 for user in users: #рассылаем пост

@@ -26,6 +26,8 @@ def create_applicant_keyboard():
     keyboard_applicant.add_line()
     keyboard_applicant.add_button('Пример слов', color=VkKeyboardColor.POSITIVE)
     keyboard_applicant.add_line()
+    keyboard_applicant.add_button('Главное меню', color=VkKeyboardColor.POSITIVE)
+    keyboard_applicant.add_line()
     keyboard_applicant.add_button('Отменить подписку', color=VkKeyboardColor.NEGATIVE)
 
     return keyboard_applicant.get_keyboard()
@@ -185,8 +187,32 @@ def get_status(user_id, group_id):
     
     else:
        return "0"
+    
+def get_users_data_as_dict(group_id): 
+    
+    if group_id == -22156807:
+        table = "kzn_users"
+    if group_id == -220670949:
+        table = "chlb_users" 
 
-#созданию соединения
+    conn = sqlite3.connect('subscriptions.db')
+    cursor = conn.cursor()
+
+    select_users_query = f'''
+    SELECT user_id, keywords
+    FROM {table}
+    WHERE keywords IS NOT NULL;
+    '''
+
+    cursor.execute(select_users_query)
+    user_data_rows = cursor.fetchall()
+
+    users_data = [{"user_id": row[0], "keywords": row[1]} for row in user_data_rows]
+
+    conn.close()
+    return users_data
+
+#созданию соединения (не используется в коде)
 def create_connection():
     connection = sqlite3.connect('subscriptions.db')
     cursor = connection.cursor()
@@ -222,7 +248,6 @@ def start_status_handler(user_id, message_text, group_id):
     else:
 
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
-    
 
 def employer_status_handler(user_id, message_text, group_id):
 
@@ -256,7 +281,7 @@ def editing_status_handler(user_id, message_text, group_id):
 
 def applicant_status_handler(user_id, message_text, group_id):
    
-    if message_text == "/start": #откат до статуса старт
+    if message_text == "/start" or message_text == "Главное меню": #откат до статуса старт
         
         remove_keywords(user_id=user_id, group_id=group_id)
         set_status(user_id=user_id, status="start", group_id=group_id) 
@@ -295,50 +320,33 @@ def none_status_handler(user_id, message_text, group_id):
         
     else: 
         return "Чтобы запустить бота, введите команду '/start'." , None, None
-        
-#обработка поста, возвращает id юзеров с совпадениями
-def post_handler(post): # хз как это работает, chatgpt наебенил
+
+#функция поиска соответствий в тексте
+def find_matching_users(users_data, post_text):
+    matching_users = []
+
+    for user in users_data:
+        user_id = user['user_id']
+        keywords = user['keywords']
+
+        # Разделение ключевых слов на отдельные слова
+        keyword_list = keywords.replace(',', ' ').split()
+
+        for keyword in keyword_list:
+            if keyword in post_text.lower():
+                matching_users.append(user_id)
+                break  # Для оптимизации - если слово найдено, выходим из внутреннего цикла
+
+    return matching_users
+       
+#обработка поста, возвращает id юзеров для рассылки поста
+def post_handler(post): 
 
     group_id = post.owner_id
 
-    if group_id == -22156807:
-        table = "kzn_users"
-    if group_id == -220670949:
-        table = "chlb_users"    
+    users_data = get_users_data_as_dict(group_id=group_id) #получаем данные из бд в словарь
     
-
-    conn = sqlite3.connect('subscriptions.db')
-    cursor = conn.cursor()
-    
-    # Разделение ключевых слов на отдельные слова
-    keywords = [word.strip() for word in post.text.replace(',', ' ').split()]
-
-    keywords = [word.lower() for word in keywords]
-
-    # Создание временной таблицы для ключевых слов
-    cursor.execute("CREATE TEMP TABLE keywords (key_word TEXT);")
-    for keyword in keywords:
-        cursor.execute("INSERT INTO keywords (key_word) VALUES (?);", (keyword, ))
-    
-    # Запрос для поиска совпадений
-    find_matching_users_query = f'''
-    SELECT DISTINCT user_id
-    FROM {table}
-    WHERE EXISTS (
-        SELECT 1
-        FROM keywords
-        WHERE INSTR(LOWER({table}.keywords), LOWER(keywords.key_word)) > 0
-    );
-    '''
-
-    # Выполнение запроса
-    result = cursor.execute(find_matching_users_query).fetchall()
-
-    # Извлечение значений user_id из результата запроса
-    matching_users = [row[0] for row in result]
-    print("Пользователи с совпадениями:", matching_users)
-    # Закрытие подключения к базе данных
-    conn.close()
+    matching_users = find_matching_users(users_data=users_data, post_text=post.text) #функция поиска соответствий
 
     return matching_users
 
