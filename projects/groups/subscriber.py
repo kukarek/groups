@@ -31,13 +31,18 @@ def create_applicant_keyboard():
     return keyboard_applicant.get_keyboard()
 
 #sql запросы
-def set_status(user_id, status):
+def set_status(user_id, status, group_id):
    
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
+    
     conn = sqlite3.connect('subscriptions.db')
     cursor = conn.cursor()
     # Запрос для обновления статуса по user_id
-    update_status_query = '''
-    UPDATE users
+    update_status_query = f'''
+    UPDATE {table}
     SET status = ?
     WHERE user_id = ?;
     '''
@@ -48,13 +53,18 @@ def set_status(user_id, status):
     conn.commit()
     conn.close()
 
-def set_keywords(user_id, keywords):
+def set_keywords(user_id, keywords, group_id):
+    
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
 
     conn = sqlite3.connect('subscriptions.db')
     cursor = conn.cursor()
     # Запрос для обновления ключевых слов
-    update_status_query = '''
-    UPDATE users
+    update_status_query = f'''
+    UPDATE {table}
     SET keywords = ?
     WHERE user_id = ?;
     '''
@@ -63,13 +73,19 @@ def set_keywords(user_id, keywords):
     conn.commit()
     conn.close()
 
-def add_user(user_id):
+def add_user(user_id, group_id):
+
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
+
     #подключение в базе данных 
     conn = sqlite3.connect('subscriptions.db')
     cursor = conn.cursor()
     #запрос на добавление нового юзера со статусом по умолчанию - start 
-    add_user_query = '''
-    INSERT INTO users (user_id, status)
+    add_user_query = f'''
+    INSERT INTO {table} (user_id, status)
     VALUES (?, ?);
     '''
     #Выполнение запроса с передачей параметров user_id и status
@@ -78,13 +94,19 @@ def add_user(user_id):
     conn.commit()
     conn.close()
 
-def remove_keywords(user_id):
+def remove_keywords(user_id, group_id):
+
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
+
     # Подключение к базе данных
     conn = sqlite3.connect('subscriptions.db')
     cursor = conn.cursor()
     # Запрос для очистки поля key_word по user_id
-    clear_keyword_query = '''
-    UPDATE users
+    clear_keyword_query = f'''
+    UPDATE {table}
     SET keywords = NULL
     WHERE user_id = ?;
     '''
@@ -94,14 +116,19 @@ def remove_keywords(user_id):
     conn.commit()
     conn.close()
 
-def get_keywords(user_id):
+def get_keywords(user_id, group_id):
+
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
 
     conn = sqlite3.connect('subscriptions.db')
     cursor = conn.cursor()
     # Запрос для получения ключевых слов по user_id
-    get_keywords_query = '''
+    get_keywords_query = f'''
     SELECT keywords
-    FROM users
+    FROM {table}
     WHERE user_id = ? AND keywords IS NOT NULL;
     '''
     # Выполнение запроса с передачей параметра user_id
@@ -111,16 +138,21 @@ def get_keywords(user_id):
     conn.close()
     return result
 
-def get_status(user_id):
+def get_status(user_id, group_id):
+
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
 
     conn = sqlite3.connect('subscriptions.db')
     cursor = conn.cursor()
 
     # Запрос для проверки наличия записи с заданным user_id
-    check_user_query = '''
+    check_user_query = f'''
     SELECT EXISTS (
         SELECT 1
-        FROM users
+        FROM {table}
         WHERE user_id = ?
         LIMIT 1
     );
@@ -135,9 +167,9 @@ def get_status(user_id):
        conn = sqlite3.connect('subscriptions.db')
        cursor = conn.cursor()
        # Запрос для получения статуса по user_id
-       get_status_query = '''
+       get_status_query = f'''
        SELECT status
-       FROM users
+       FROM {table}
        WHERE user_id = ?;
        '''
        # Выполнение запроса с передачей параметра user_id
@@ -158,24 +190,30 @@ def create_connection():
     cursor = connection.cursor()
 
     # Создаем таблицу для хранения подписок пользователей, если она не существует
-    cursor.execute('''CREATE TABLE IF NOT EXISTS users
+    cursor.execute('''CREATE TABLE IF NOT EXISTS kzn_users
                       (user_id INTEGER PRIMARY KEY, keywords TEXT, status TEXT)''')
 
     connection.commit()
-    return connection
+
+    cursor.execute('''CREATE TABLE IF NOT EXISTS chlb_users
+                      (user_id INTEGER PRIMARY KEY, keywords TEXT, status TEXT)''')
+
+    connection.commit()
+    connection.close()
 
 #обработка сообщений, учитывая статус юзера, каждая функция должна возвращать текст ответа, клавиутуру, необходимость уведомить админа
-def start_status_handler(user_id, message_text):
+def start_status_handler(user_id, message_text, group_id):
+    
     
     if message_text == 'Хочу разместить вакансию':
         
-        set_status(user_id=user_id, status="employer")
+        set_status(user_id=user_id, status="employer", group_id=group_id)
         
         return 'Сейчас вам ответит администратор!', None, True
 
     elif message_text == 'Ищу работу':
         
-        set_status(user_id=user_id, status="applicant")
+        set_status(user_id=user_id, status="applicant", group_id=group_id)
         
         return 'Выберите действие на клавиатуре:', create_applicant_keyboard(), None
 
@@ -184,52 +222,52 @@ def start_status_handler(user_id, message_text):
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
     
 
-def employer_status_handler(user_id, message_text):
+def employer_status_handler(user_id, message_text, group_id):
 
     if message_text == "/start": #откат до статуса старт
 
-        set_status(user_id=user_id, status="start")
+        set_status(user_id=user_id, status="start", group_id=group_id)
 
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
     
     else:
         return None, None, True #бот не обрабатывает сообщение, уведомляет админа 
 
-def editing_status_handler(user_id, message_text):
+def editing_status_handler(user_id, message_text, group_id):
     
     if message_text == "/start":
 
-        remove_keywords(user_id=user_id)
-        set_status(user_id=user_id, status="start")
+        remove_keywords(user_id=user_id, group_id=group_id)
+        set_status(user_id=user_id, status="start", group_id=group_id)
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
     
     elif message_text == "" or message_text == "Отменить подписку":
 
-        remove_keywords(user_id=user_id)
-        set_status(user_id=user_id, status="applicant")  
+        remove_keywords(user_id=user_id, group_id=group_id)
+        set_status(user_id=user_id, status="applicant", group_id=group_id)  
         return "Подписка отменена!", None, None
     
     else:
-        set_keywords(user_id=user_id,keywords=message_text)
-        set_status(user_id=user_id, status="applicant")   
+        set_keywords(user_id=user_id,keywords=message_text, group_id=group_id)
+        set_status(user_id=user_id, status="applicant", group_id=group_id)   
         return "Подписка по вашим ключевым словам - активна!", None, None
 
-def applicant_status_handler(user_id, message_text):
+def applicant_status_handler(user_id, message_text, group_id):
    
     if message_text == "/start": #откат до статуса старт
         
-        remove_keywords(user_id=user_id)
-        set_status(user_id=user_id, status="start") 
+        remove_keywords(user_id=user_id, group_id=group_id)
+        set_status(user_id=user_id, status="start", group_id=group_id) 
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
     
     elif message_text == "Редактировать ключевые слова":
         
-        set_status(user_id=user_id, status="editing")
+        set_status(user_id=user_id, status="editing", group_id=group_id)
         return "Отправьте ключевые слова через запятую", None, None
 
     elif message_text == "Просмотреть ключевые слова":
         
-        words = get_keywords(user_id=user_id)
+        words = get_keywords(user_id=user_id, group_id=group_id)
         if words:
             return words[0], None, None
         else:
@@ -240,17 +278,17 @@ def applicant_status_handler(user_id, message_text):
 
     elif message_text == "Отменить подписку":
 
-        remove_keywords(user_id=user_id)
+        remove_keywords(user_id=user_id, group_id=group_id)
         return "Подписка отменена!", None, None
 
     else:
         return 'Выберите действие на клавиатуре:', create_applicant_keyboard(), None
 
-def none_status_handler(user_id, message_text):
+def none_status_handler(user_id, message_text, group_id):
     
     if message_text == '/start':
          
-        add_user(user_id=user_id) #запись нового пользователя в бд, статус по умочланию = start
+        add_user(user_id=user_id, group_id=group_id) #запись нового пользователя в бд, статус по умочланию = start
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
         
     else: 
@@ -258,6 +296,14 @@ def none_status_handler(user_id, message_text):
         
 #обработка поста, возвращает id юзеров с совпадениями
 def post_handler(post): # хз как это работает, chatgpt наебенил
+
+    group_id = post.owner_id
+
+    if group_id == "-22156807":
+        table = "kzn_users"
+    if group_id == "-220670949":
+        table = "chlb_users"    
+    
 
     conn = sqlite3.connect('subscriptions.db')
     cursor = conn.cursor()
@@ -271,9 +317,9 @@ def post_handler(post): # хз как это работает, chatgpt наеб�
         cursor.execute("INSERT INTO keywords (key_word) VALUES (?);", (keyword, ))
     
     # Запрос для поиска совпадений
-    find_matching_users_query = '''
+    find_matching_users_query = f'''
     SELECT DISTINCT user_id
-    FROM users
+    FROM {table}
     WHERE EXISTS (
         SELECT 1
         FROM keywords
@@ -294,31 +340,32 @@ def post_handler(post): # хз как это работает, chatgpt наеб�
 
 #обработка входящего сообщения, возвращает текст ответа, клавиатуру, необходимость уведомить админа
 def reply_message_handler(event):
-
+    
+    group_id = event.group_id
     user_id = event.message.from_id
     message_text = event.message.text
 
-    status = get_status(user_id=user_id)[0]
+    status = get_status(user_id=user_id, group_id=group_id)[0]
         
     if status == "start":
         
-        response, keybord, notify = start_status_handler(user_id=user_id,message_text=message_text)
+        response, keybord, notify = start_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
 
     elif status == "employer":
         
-        response, keybord, notify = employer_status_handler(user_id=user_id,message_text=message_text)
+        response, keybord, notify = employer_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
 
     elif status == "applicant":
 
-        response, keybord, notify = applicant_status_handler(user_id=user_id,message_text=message_text)
+        response, keybord, notify = applicant_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
 
     elif status == "editing":
         
-        response, keybord, notify = editing_status_handler(user_id=user_id,message_text=message_text)
+        response, keybord, notify = editing_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
 
     else:
 
-        response, keybord, notify = none_status_handler(user_id=user_id,message_text=message_text)
+        response, keybord, notify = none_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
         
     return response, keybord, notify
 

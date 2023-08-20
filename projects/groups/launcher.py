@@ -1,16 +1,16 @@
-import repost
-import repostbychelyaba
+import pooling_chlb
+import pooling_kzn
 import threading
-import parser_bot
+import helper_bot
 
 def startkzn():
-    repost.main()
+    pooling_kzn.main()
 
 def startchlb():
-    repostbychelyaba.main()
+    pooling_chlb.main()
 
 def startparserbot():
-    parser_bot.main()
+    helper_bot.main()
       
 
 if __name__=="__main__":

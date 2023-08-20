@@ -72,7 +72,7 @@ def send_to_telegram(event):
        asyncio.run(send_telegram(image= "", caption=message))  
 
 def main():
-    
+    subscriber.create_connection()
     while True:
         
         vk_session = vk_api.VkApi(token=VK_TOKEN)
@@ -86,7 +86,7 @@ def main():
            for event in longpoll.listen():
              
             if event.type == VkBotEventType.MESSAGE_NEW:
-
+                #id группы = event.group_id
                 reply, keybord, notify = subscriber.reply_message_handler(event=event)
 
                 if notify == True: #уведомление админа
@@ -100,7 +100,7 @@ def main():
                 
 
             if event.type == VkBotEventType.WALL_POST_NEW:
-                
+                #id группы = event.object.owner_id
                 send_to_telegram(event=event) #пересылка поста в телеграм канал
                 users = subscriber.post_handler(event.object) #тянем из бд список подписчиков, чьи слова совпадают 
                 
