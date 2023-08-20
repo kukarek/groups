@@ -60,6 +60,8 @@ def set_keywords(user_id, keywords, group_id):
     if group_id == 220670949:
         table = "chlb_users"
 
+    keywords = keywords.lower()
+
     conn = sqlite3.connect('subscriptions.db')
     cursor = conn.cursor()
     # Запрос для обновления ключевых слов
@@ -299,9 +301,9 @@ def post_handler(post): # хз как это работает, chatgpt наеб�
 
     group_id = post.owner_id
 
-    if group_id == "-22156807":
+    if group_id == -22156807:
         table = "kzn_users"
-    if group_id == "-220670949":
+    if group_id == -220670949:
         table = "chlb_users"    
     
 
@@ -310,6 +312,8 @@ def post_handler(post): # хз как это работает, chatgpt наеб�
     
     # Разделение ключевых слов на отдельные слова
     keywords = [word.strip() for word in post.text.replace(',', ' ').split()]
+
+    keywords = [word.lower() for word in keywords]
 
     # Создание временной таблицы для ключевых слов
     cursor.execute("CREATE TEMP TABLE keywords (key_word TEXT);")
@@ -323,7 +327,7 @@ def post_handler(post): # хз как это работает, chatgpt наеб�
     WHERE EXISTS (
         SELECT 1
         FROM keywords
-        WHERE INSTR(LOWER(users.keywords), LOWER(keywords.key_word)) > 0
+        WHERE INSTR(LOWER({table}.keywords), LOWER(keywords.key_word)) > 0
     );
     '''
 
