@@ -313,13 +313,13 @@ def applicant_status_handler(user_id, message_text, group_id):
 
 def none_status_handler(user_id, message_text, group_id):
     
-    if message_text == '/start':
+    if message_text == '/start' or message_text.lower() == 'start' or message_text == 'старт' or message_text.lower() == 'начать' or message_text.lower() == 'запустить':
          
         add_user(user_id=user_id, group_id=group_id) #запись нового пользователя в бд, статус по умочланию = start
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
         
     else: 
-        return "Чтобы запустить бота, введите команду '/start'." , None, None
+        return None, None, True #бот не обрабатывает сообщение, уведомляет админа
 
 #функция поиска соответствий в тексте
 def find_matching_users(users_data, post_text):
@@ -330,7 +330,7 @@ def find_matching_users(users_data, post_text):
         keywords = user['keywords']
 
         # Разделение ключевых слов на отдельные слова
-        keyword_list = keywords.replace(',', ' ').split()
+        keyword_list = keywords.split(',')
 
         for keyword in keyword_list:
             if keyword in post_text.lower():

@@ -58,12 +58,18 @@ async def on_help(message: Message):
                          "cycle=0..27\n"
                          "VK=bool\n"
                          "TG=bool\n"
+                         "status - состояние накрутки\n"
                          "выражения пишуться через 1 пробел\n")
 
 @dp.message_handler(commands=['start_wrapping'])
 async def on_help(message: Message):
     
     wrapping.start_wrapping()
+
+@dp.message_handler(commands=['status'])
+async def on_help(message: Message):
+    
+    await message.answer(wrapping.status())
     
 
 
@@ -107,7 +113,7 @@ async def echo(message: Message):
         if wrapping.start_wrapping(cycle=cycle,VK=VK,TG=TG):
            await message.answer(f"Запуск накрутки: cycle={cycle}, VK={VK}, TG={TG}")
         else:
-           await message.answer("Накрутка уже запущена!")
+           await message.answer("Накрутка уже запущена, либо поток еще не завершил свой крайний цикл")
 
      elif text.find("VK") != -1 or text.find("TG") != -1: #меняет статус накрутки тг и вк
         

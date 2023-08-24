@@ -67,12 +67,24 @@ def get_tg_posts_id(url):  #принимает url страницу группы
 
 class States: #содежит состояния накрутки
    
-   stop = False  #остановка накрутки после завершения текущего цикла, если значение True
-   VK = bool #если значение False, вк не крутиться
-   TG = bool #если значение False, тг не крутиться
+   stop = True  #остановка накрутки после завершения текущего цикла, если значение True
+   VK = True #если значение False, вк не крутиться
+   TG = True #если значение False, тг не крутиться
+   cycle = 0
+   message = str
 
 active_threads = [] #отслеживание активных потоков
 
+
+def status():
+          
+    if States.message != None:
+       return States.message
+    elif States.stop == False:
+       return f"VK = {States.VK}, TG = {States.TG}, cycle = {States.cycle}"
+    else:
+       return f"автонакрутка неактивна"
+  
 
 def start_wrapping(cycle = 0, VK = True, TG = True):
  
@@ -93,8 +105,10 @@ def wrapping(cycle, VK, TG):
   States.TG = TG
   States.stop = False
   i = cycle
-  while i < 28:    #цикл на 14 часов, каждые 30 минут 
-   if States.stop == False:    
+
+  try:
+   while i < 28:    #цикл на 14 часов, каждые 30 минут 
+    if States.stop == False:    
      kzn_posts_id = get_vk_posts_id(kzn_url)
      chlb_posts_id = get_vk_posts_id(chlb_url)
      tg_kzn_posts_id = get_tg_posts_id(tg_kzn_url)
@@ -162,11 +176,23 @@ def wrapping(cycle, VK, TG):
           
           k += 1
 
-     print(f"цикл: {i}")   
+     print(f"цикл: {i}") 
+
+     States.cycle = i  
+
+     if i == 27:
+        States.stop = True
+        active_threads.clear() #перед завершением функции чистим список активных потоков
+
      time.sleep(1800)     # 30 минут пауза
      i += 1 
-   else:
+    else:
       active_threads.clear() #перед завершением функции чистим список активных потоков
       break
+    
+  except Exception as e:
+      active_threads.clear()
+      States.message = e
+      
       
 
