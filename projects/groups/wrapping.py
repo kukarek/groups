@@ -71,7 +71,7 @@ class States: #содежит состояния накрутки
    VK = True #если значение False, вк не крутиться
    TG = True #если значение False, тг не крутиться
    cycle = 0
-   message = str
+   message = None
 
 active_threads = [] #отслеживание активных потоков
 
