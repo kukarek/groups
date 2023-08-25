@@ -1,60 +1,93 @@
+from bs4 import BeautifulSoup
+import re
 import sqlite3
 
+bybit = 'C:\\Users\\Dmitry\\Documents\\softforgroups\\projects\\testing\\spiski\\bybit.txt'
+bitget = 'C:\\Users\\Dmitry\\Documents\\softforgroups\\projects\\testing\\spiski\\bitget.txt'
+coinex = 'C:\\Users\\Dmitry\\Documents\\softforgroups\\projects\\testing\\spiski\\coinex.txt'
 
-def get_users_data_as_dict():
+def extract_info(block):
+    lines = block.strip().split('\n')
+    name = lines[1].strip()
+    
+    return name
 
-    conn = sqlite3.connect('subscriptions.db')
+
+def func():
+    # Чтение данных из файла
+    with open('C:\\Users\\Dmitry\\Documents\\softforgroups\\projects\\testing\\data.txt', 'r', encoding='utf-8') as file:
+         data = file.read()
+
+    blocks = re.split(r'\n\d+\n', data)
+    # Удаление пустых элементов и первого элемента (пустой)
+    blocks = list(filter(lambda x: x.strip() != '', blocks))[1:]
+
+    # Извлечение данных из каждого блока
+    coin_info = [extract_info(block) for block in blocks]
+    
+    names = ""
+    # Вывод информации о монетах с парой к USDT
+    for name in coin_info:
+        names = names + name + '\n'
+
+    with open('C:\\Users\\Dmitry\\Documents\\softforgroups\\projects\\testing\\complied.txt', 'w', encoding='utf-8') as file:
+         file.write(names)
+
+def func2():
+    
+    # Чтение данных из трех файлов
+    with open(bybit, 'r', encoding='utf-8') as file1, open(bitget, 'r', encoding='utf-8') as file2, open(coinex, 'r', encoding='utf-8') as file3:
+         coins1 = set(file1.read().splitlines())
+         coins2 = set(file2.read().splitlines())
+         coins3 = set(file3.read().splitlines())
+
+    # Находим пересечения и различия множеств монет
+    common_coins = coins1 & coins2 & coins3
+    coins_only_in_2 = (coins1 & coins2) - coins3
+    coins_only_in_3 = (coins1 & coins3) - coins2
+    coins_only_in_1 = (coins2 & coins3) - coins1
+
+    # Создаем таблицу
+    table = []
+
+    for coin in common_coins:
+        table.append((coin, coin, coin))
+
+    for coin in coins_only_in_2:
+        table.append((coin, coin, ""))
+
+    for coin in coins_only_in_3:
+        table.append((coin, "", coin))
+
+    for coin in coins_only_in_1:
+        table.append(("", coin, coin))
+    
+    # Вывод таблицы
+    print("{:<20} {:<20} {:<20}".format("Exchange 1", "Exchange 2", "Exchange 3"))
+    for row in table:
+        print("{:<20} {:<20} {:<20}".format(*row))
+    
+    return table
+
+def main():
+    
+    conn = sqlite3.connect('tokens_table.db')
     cursor = conn.cursor()
 
-    select_users_query = '''
-    SELECT user_id, keywords
-    FROM chlb_users
-    WHERE keywords IS NOT NULL;
-    '''
+    with open('C:\\Users\\Dmitry\\Documents\\softforgroups\\projects\\testing\\1 coloumn.txt', 'r', encoding='utf-8') as file:
+         data = file.read()
 
-    cursor.execute(select_users_query)
-    user_data_rows = cursor.fetchall()
+    list = data.split('\n')
+        
 
-    users_data = [{"user_id": row[0], "keywords": row[1]} for row in user_data_rows]
+    for token in list:
+        cursor.execute("INSERT INTO tokens (token_name) VALUES (?)", (token,))
+        conn.commit()
+
 
     conn.close()
-    return users_data
 
-def find_matching_users(users_data, post_text):
-    matching_users = []
-
-    for user in users_data:
-        user_id = user['user_id']
-        keywords = user['keywords']
-
-        # Разделение ключевых слов на отдельные слова
-        keyword_list = keywords.replace(',', ' ').split()
-
-        for keyword in keyword_list:
-            if keyword in post_text.lower():
-                matching_users.append(user_id)
-                break  # Для оптимизации - если слово найдено, выходим из внутреннего цикла
-
-    return matching_users
-def main():
-# Пример использования
-   users_data = [
-    {"user_id": 1, "keywords": "apple, banana"},
-    {"user_id": 2, "keywords": "orange, grape"},
-    {"user_id": 3, "keywords": "cherry, lemon"},
-   ]
-   
-   users_data = get_users_data_as_dict()
-    
-   external_text = "I love bananas and oranges. тест"
-
-   result = find_matching_users(users_data, external_text)
-
-   if result:
-      print("Пользователи с совпадающими ключевыми словами:", result)
-   else:
-      print("Совпадающие пользователи не найдены.")
-
+    print()
 
 if __name__ == '__main__':
     main()
