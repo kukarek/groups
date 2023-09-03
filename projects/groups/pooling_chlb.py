@@ -6,6 +6,7 @@ import time
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
+import subscriber
 
 
 # Укажите токен VK бота и Telegram бота
@@ -49,7 +50,23 @@ async def send_telegram(image, caption):
 
     await bot.close()
 
+def send_to_telegram(event):
+   
+    message = event.object.text
+    if len(message) < 4000:
+      if len(message) < 1000:
 
+       attachments = event.object.attachments
+
+       if attachments and "photo" in attachments[0]:
+        # Если в записи есть изображения, получаем ссылку на изображение
+        photo_url = attachments[0]["photo"]["sizes"][-1]["url"]
+        asyncio.run(send_telegram(image=photo_url, caption=message))
+       else:
+        # Если в записи нет изображений, отправляем только текст
+        asyncio.run(send_telegram(image= "", caption=message))
+      else:
+       asyncio.run(send_telegram(image= "", caption=message))  
 
 
 def main():
@@ -68,25 +85,25 @@ def main():
            for event in longpoll.listen():
               
              if event.type == VkBotEventType.MESSAGE_NEW:
-                content = event.message.text
-                vk.messages.send(user_id=732405775, message=f"Новое сообщение! '{content}'", random_id=0)
+                #id группы = event.group_id
+                reply, keybord, notify = subscriber.reply_message_handler(event=event)
+
+                if notify == True: #уведомление админа
+                   vk.messages.send(user_id=732405775, message=f"Новое сообщение! '{event.message.text}'", random_id=0)
+
+                if reply != None: #отправка ответа юзеру с клавиатурой, либо без нее
+                   if keybord != None:
+                      vk.messages.send(user_id=event.message.from_id, message=reply, random_id=0, keyboard=keybord)
+                   else:
+                      vk.messages.send(user_id=event.message.from_id, message=reply, random_id=0) 
                 
              if event.type == VkBotEventType.WALL_POST_NEW:
-                message = event.object.text
-                if len(message) < 4000:
-                 if len(message) < 1000:
-
-                   attachments = event.object.attachments
-
-                   if attachments and "photo" in attachments[0]:
-                     # Если в записи есть изображения, получаем ссылку на изображение
-                     photo_url = attachments[0]["photo"]["sizes"][-1]["url"]
-                     asyncio.run(send_telegram(image=photo_url, caption=message))
-                   else:
-                     # Если в записи нет изображений, отправляем только текст
-                     asyncio.run(send_telegram(image= "", caption=message))
-                 else: 
-                   asyncio.run(send_telegram(image= "", caption=message))
+                #id группы = event.object.owner_id
+                send_to_telegram(event=event) #пересылка поста в телеграм канал
+                users = subscriber.post_handler(event.object) #тянем из бд список подписчиков, чьи слова совпадают 
+                
+                for user in users: #рассылаем пост
+                   vk.messages.send(user_id=user, message="Новый пост!", attachment=f"wall-220670949_{event.object.id}", random_id=0)
 
         except Exception as e:
             # В случае ошибки, печатаем ее и продолжаем прослушивание

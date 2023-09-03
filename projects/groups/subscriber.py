@@ -3,224 +3,387 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 import sqlite3
 import random
-"""
-библиотека создана для того, чтобы обрабатывать входящие сообщения по user_id, status и message.text
-status тянет из локальной бд 
-здесь происходит все взамодействие с бд 
-принимает сообщение, определяет по статусу переписки ответ, возвращает ответ и id получателя
-"""
 
-def create_keyboard():
-    # Создаем клавиатуру
-    keyboard = VkKeyboard(one_time=True)
+# Создаем клавиатуры
+def create_start_keyboard():
+    
+    keyboard_start = VkKeyboard(one_time=True)
 
     # Добавляем кнопки
-    keyboard.add_button('Хорошо, спасибо!', color=VkKeyboardColor.POSITIVE)
-    keyboard.add_button('Давай попробуем', color=VkKeyboardColor.POSITIVE)
-    keyboard.add_line()  # Переход на вторую строку
-    keyboard.add_button('Отменить подписку', color=VkKeyboardColor.NEGATIVE)
+    keyboard_start.add_button('Хочу разместить вакансию', color=VkKeyboardColor.POSITIVE)
+    keyboard_start.add_button('Ищу работу', color=VkKeyboardColor.POSITIVE)
 
-    return keyboard.get_keyboard()
+    return keyboard_start.get_keyboard()
 
-def send_text_message_with_keyboard(vk, user_id, message, keyboard):
-    try:
-        random_id = random.randint(1, 10**9)
-        vk.messages.send(user_id=user_id, message=message, random_id=random_id, keyboard=keyboard)
-        print("Текстовое сообщение успешно отправлено!")
-    except vk_api.VkApiError as e:
-        print(f"Ошибка при отправке текстового сообщения: {e}")
+def create_applicant_keyboard():
+    
+    keyboard_applicant = VkKeyboard()
 
+    # Добавляем кнопки
+    keyboard_applicant.add_button('Редактировать ключевые слова', color=VkKeyboardColor.POSITIVE)
+    keyboard_applicant.add_line()
+    keyboard_applicant.add_button('Просмотреть ключевые слова', color=VkKeyboardColor.POSITIVE)
+    keyboard_applicant.add_line()
+    keyboard_applicant.add_button('Пример слов', color=VkKeyboardColor.POSITIVE)
+    keyboard_applicant.add_line()
+    keyboard_applicant.add_button('Главное меню', color=VkKeyboardColor.POSITIVE)
+    keyboard_applicant.add_line()
+    keyboard_applicant.add_button('Отменить подписку', color=VkKeyboardColor.NEGATIVE)
+
+    return keyboard_applicant.get_keyboard()
+
+#sql запросы
+def set_status(user_id, status, group_id):
+   
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
+    
+    conn = sqlite3.connect('subscriptions.db')
+    cursor = conn.cursor()
+    # Запрос для обновления статуса по user_id
+    update_status_query = f'''
+    UPDATE {table}
+    SET status = ?
+    WHERE user_id = ?;
+    '''
+    # Выполнение запроса с передачей параметров new_status и user_id
+    cursor.execute(update_status_query, (status, user_id))
+    # Сохранение изменений и закрытие подключения к базе данных
+                
+    conn.commit()
+    conn.close()
+
+def set_keywords(user_id, keywords, group_id):
+    
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
+
+    keywords = keywords.lower()
+
+    conn = sqlite3.connect('subscriptions.db')
+    cursor = conn.cursor()
+    # Запрос для обновления ключевых слов
+    update_status_query = f'''
+    UPDATE {table}
+    SET keywords = ?
+    WHERE user_id = ?;
+    '''
+    cursor.execute(update_status_query, (keywords, user_id))
+    # Сохранение изменений и закрытие подключения к базе данных
+    conn.commit()
+    conn.close()
+
+def add_user(user_id, group_id):
+
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
+
+    #подключение в базе данных 
+    conn = sqlite3.connect('subscriptions.db')
+    cursor = conn.cursor()
+    #запрос на добавление нового юзера со статусом по умолчанию - start 
+    add_user_query = f'''
+    INSERT INTO {table} (user_id, status)
+    VALUES (?, ?);
+    '''
+    #Выполнение запроса с передачей параметров user_id и status
+    cursor.execute(add_user_query, (user_id, "start"))
+    # Сохранение изменений и закрытие подключения к базе данных
+    conn.commit()
+    conn.close()
+
+def remove_keywords(user_id, group_id):
+
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
+
+    # Подключение к базе данных
+    conn = sqlite3.connect('subscriptions.db')
+    cursor = conn.cursor()
+    # Запрос для очистки поля key_word по user_id
+    clear_keyword_query = f'''
+    UPDATE {table}
+    SET keywords = NULL
+    WHERE user_id = ?;
+    '''
+    # Выполнение запроса с передачей параметра user_id
+    cursor.execute(clear_keyword_query, (user_id,))
+    # Сохранение изменений и закрытие подключения к базе данных
+    conn.commit()
+    conn.close()
+
+def get_keywords(user_id, group_id):
+
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
+
+    conn = sqlite3.connect('subscriptions.db')
+    cursor = conn.cursor()
+    # Запрос для получения ключевых слов по user_id
+    get_keywords_query = f'''
+    SELECT keywords
+    FROM {table}
+    WHERE user_id = ? AND keywords IS NOT NULL;
+    '''
+    # Выполнение запроса с передачей параметра user_id
+    cursor.execute(get_keywords_query, (user_id,))
+    result = cursor.fetchone()
+    # Закрытие подключения к базе данных
+    conn.close()
+    return result
+
+def get_status(user_id, group_id):
+
+    if group_id == 22156807:
+        table = "kzn_users"
+    if group_id == 220670949:
+        table = "chlb_users"
+
+    conn = sqlite3.connect('subscriptions.db')
+    cursor = conn.cursor()
+
+    # Запрос для проверки наличия записи с заданным user_id
+    check_user_query = f'''
+    SELECT EXISTS (
+        SELECT 1
+        FROM {table}
+        WHERE user_id = ?
+        LIMIT 1
+    );
+    '''
+    # Выполнение запроса с передачей параметра user_id
+    cursor.execute(check_user_query, (user_id,))
+    result = cursor.fetchone()[0]
+    conn.commit()
+    conn.close()
+    
+    if result == 1:
+       conn = sqlite3.connect('subscriptions.db')
+       cursor = conn.cursor()
+       # Запрос для получения статуса по user_id
+       get_status_query = f'''
+       SELECT status
+       FROM {table}
+       WHERE user_id = ?;
+       '''
+       # Выполнение запроса с передачей параметра user_id
+       cursor.execute(get_status_query, (user_id,))
+       status = cursor.fetchone()
+
+       conn.commit()
+       conn.close()
+
+       return status
+    
+    else:
+       return "0"
+    
+def get_users_data_as_dict(group_id): 
+    
+    if group_id == -22156807:
+        table = "kzn_users"
+    if group_id == -220670949:
+        table = "chlb_users" 
+
+    conn = sqlite3.connect('subscriptions.db')
+    cursor = conn.cursor()
+
+    select_users_query = f'''
+    SELECT user_id, keywords
+    FROM {table}
+    WHERE keywords IS NOT NULL;
+    '''
+
+    cursor.execute(select_users_query)
+    user_data_rows = cursor.fetchall()
+
+    users_data = [{"user_id": row[0], "keywords": row[1]} for row in user_data_rows]
+
+    conn.close()
+    return users_data
+
+#созданию соединения (не используется в коде)
 def create_connection():
     connection = sqlite3.connect('subscriptions.db')
     cursor = connection.cursor()
 
     # Создаем таблицу для хранения подписок пользователей, если она не существует
-    cursor.execute('''CREATE TABLE IF NOT EXISTS subscriptions
-                      (user_id INTEGER PRIMARY KEY, keywords TEXT)''')
-
-    # Создаем таблицу для хранения последнего ID поста, если она не существует
-    cursor.execute('''CREATE TABLE IF NOT EXISTS last_post_id
-                      (group_id TEXT PRIMARY KEY, post_id INTEGER)''')
+    cursor.execute('''CREATE TABLE IF NOT EXISTS kzn_users
+                      (user_id INTEGER PRIMARY KEY, keywords TEXT, status TEXT)''')
 
     connection.commit()
-    return connection
 
-def insert_subscription(connection, user_id, keywords):
-    cursor = connection.cursor()
-    cursor.execute('INSERT OR REPLACE INTO subscriptions (user_id, keywords) VALUES (?, ?)', (user_id, keywords))
+    cursor.execute('''CREATE TABLE IF NOT EXISTS chlb_users
+                      (user_id INTEGER PRIMARY KEY, keywords TEXT, status TEXT)''')
+
     connection.commit()
+    connection.close()
 
-def get_subscription(connection, user_id):
-    cursor = connection.cursor()
-    cursor.execute('SELECT keywords FROM subscriptions WHERE user_id = ?', (user_id,))
-    result = cursor.fetchone()
-    return result[0] if result else None
+#обработка сообщений, учитывая статус юзера, каждая функция должна возвращать текст ответа, клавиутуру, необходимость уведомить админа
+def start_status_handler(user_id, message_text, group_id):
+    
+    
+    if message_text == 'Хочу разместить вакансию':
+        
+        set_status(user_id=user_id, status="employer", group_id=group_id)
+        
+        return 'Сейчас вам ответит администратор!', None, True
 
-def send_text_message(vk, user_id, message):
-    try:
-        random_id = random.randint(1, 10**9)
-        vk.messages.send(user_id=user_id, message=message, random_id=random_id)
-        print("Текстовое сообщение успешно отправлено!")
-    except vk_api.VkApiError as e:
-        print(f"Ошибка при отправке текстового сообщения: {e}")
+    elif message_text == 'Ищу работу':
+        
+        set_status(user_id=user_id, status="applicant", group_id=group_id)
+        
+        return 'Выберите действие на клавиатуре:', create_applicant_keyboard(), None
 
-def send_wall_post_to_subscribers(connection, vk, group_id, post_id):
-    cursor = connection.cursor()
-    cursor.execute('SELECT user_id, keywords FROM subscriptions')
-    subscribers = cursor.fetchall()
+    else:
 
-    for subscriber in subscribers:
-        user_id, keywords = subscriber
-        if keywords:
-            # Проверяем, соответствует ли пост ключевым словам подписчика
-            post = vk.wall.getById(posts=f"{group_id}_{post_id}", extended=1)
-            post_text = post[0]['text']
-            if any(keyword.lower() in post_text.lower() for keyword in keywords.split(',')):
-                # Пересылаем пост подписчику, если есть соответствие
-                try:
-                    random_id = random.randint(1, 10**9)
-                    vk.messages.send(user_id=user_id, forward_messages=post_id, random_id=random_id)
-                    print(f"Пост переслан подписчику {user_id}")
-                except vk_api.VkApiError as e:
-                    print(f"Ошибка при пересылке поста пользователю {user_id}: {e}")
+        return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
 
-    # Обновляем последний ID поста в базе данных
-    set_last_post_id(connection, group_id, post_id)
+def employer_status_handler(user_id, message_text, group_id):
 
-    for subscriber in subscribers:
-        user_id, keywords = subscriber
-        if keywords:
-            # Проверяем, соответствует ли пост ключевым словам подписчика
-            try:
-                code = f'''
-                    var post = API.wall.getById({{"posts": "{group_id}_{post_id}"}})[0];
-                    var post_text = post.text;
-                    return post_text;
-                '''
+    if message_text == "/start": #откат до статуса старт
 
-                response = vk.execute(code)
+        set_status(user_id=user_id, status="start", group_id=group_id)
 
-                post_text = response['response']
+        return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
+    
+    else:
+        return None, None, True #бот не обрабатывает сообщение, уведомляет админа 
 
-                # Преобразуем ключевые слова в список, разделенный запятыми
-                keyword_list = [keyword.strip().lower() for keyword in keywords.split(',')]
-            
-                if any(keyword in post_text.lower() for keyword in keyword_list):
-                    # Пересылаем пост подписчику, если есть соответствие
-                    try:
-                        attachments = f"wall{group_id}_{post_id}"
-                        random_id = vk_api.utils.get_random_id()
-                        vk.messages.send(user_id=user_id, attachment=attachments, random_id=random_id)
-                        print(f"Запись со стены переслана подписчику {user_id}")
-                    except vk_api.VkApiError as e:
-                        print(f"Ошибка при пересылке записи со стены пользователю {user_id}: {e}")
-            except vk_api.VkApiError as e:
-                print(f"Ошибка при получении информации о посте со стены: {e}")
+def editing_status_handler(user_id, message_text, group_id):
+    
+    if message_text == "/start":
 
-    # Обновляем последний ID поста в базе данных
-    set_last_post_id(connection, group_id, post_id)
+        remove_keywords(user_id=user_id, group_id=group_id)
+        set_status(user_id=user_id, status="start", group_id=group_id)
+        return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
+    
+    elif message_text == "" or message_text == "Отменить подписку":
 
-# Остальные функции остаются без изменений
+        remove_keywords(user_id=user_id, group_id=group_id)
+        set_status(user_id=user_id, status="applicant", group_id=group_id)  
+        return "Подписка отменена!", None, None
+    
+    else:
+        set_keywords(user_id=user_id,keywords=message_text, group_id=group_id)
+        set_status(user_id=user_id, status="applicant", group_id=group_id)   
+        return "Подписка по вашим ключевым словам - активна!", None, None
 
+def applicant_status_handler(user_id, message_text, group_id):
+   
+    if message_text == "/start" or message_text == "Главное меню": #откат до статуса старт
+        
+        remove_keywords(user_id=user_id, group_id=group_id)
+        set_status(user_id=user_id, status="start", group_id=group_id) 
+        return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
+    
+    elif message_text == "Редактировать ключевые слова":
+        
+        set_status(user_id=user_id, status="editing", group_id=group_id)
+        return "Отправьте ключевые слова через запятую", None, None
 
+    elif message_text == "Просмотреть ключевые слова":
+        
+        words = get_keywords(user_id=user_id, group_id=group_id)
+        if words:
+            return words[0], None, None
+        else:
+            return "У вас нет ключевых слов для подписки :(", None, None
 
+    elif message_text == "Пример слов":
+        return "без опыта, официант, бармен, подработка, стройка, шабашка, оплата сразу", None, None
 
+    elif message_text == "Отменить подписку":
 
-def get_last_post_id(connection, group_id):
-    cursor = connection.cursor()
-    cursor.execute('SELECT post_id FROM last_post_id WHERE group_id = ?', (group_id,))
-    result = cursor.fetchone()
-    return result[0] if result else 0  # Возвращаем 0, если пост с последним ID не найден
+        remove_keywords(user_id=user_id, group_id=group_id)
+        return "Подписка отменена!", None, None
 
+    else:
+        return 'Выберите действие на клавиатуре:', create_applicant_keyboard(), None
 
-def set_last_post_id(connection, group_id, post_id):
-    cursor = connection.cursor()
-    cursor.execute('INSERT OR REPLACE INTO last_post_id (group_id, post_id) VALUES (?, ?)', (group_id, post_id))
-    connection.commit()
+def none_status_handler(user_id, message_text, group_id):
+    
+    if message_text == '/start' or message_text.lower() == 'start' or message_text == 'старт' or message_text.lower() == 'начать' or message_text.lower() == 'запустить':
+         
+        add_user(user_id=user_id, group_id=group_id) #запись нового пользователя в бд, статус по умочланию = start
+        return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
+        
+    else: 
+        return None, None, True #бот не обрабатывает сообщение, уведомляет админа
+
+#функция поиска соответствий в тексте
+def find_matching_users(users_data, post_text):
+    matching_users = []
+
+    for user in users_data:
+        user_id = user['user_id']
+        keywords = user['keywords']
+
+        # Разделение ключевых слов на отдельные слова
+        keyword_list = keywords.split(',')
+
+        for keyword in keyword_list:
+            if keyword in post_text.lower():
+                matching_users.append(user_id)
+                break  # Для оптимизации - если слово найдено, выходим из внутреннего цикла
+
+    return matching_users
+       
+#обработка поста, возвращает id юзеров для рассылки поста
+def post_handler(post): 
+
+    group_id = post.owner_id
+
+    users_data = get_users_data_as_dict(group_id=group_id) #получаем данные из бд в словарь
+    
+    matching_users = find_matching_users(users_data=users_data, post_text=post.text) #функция поиска соответствий
+
+    return matching_users
+
+#обработка входящего сообщения, возвращает текст ответа, клавиатуру, необходимость уведомить админа
+def reply_message_handler(event):
+    
+    group_id = event.group_id
+    user_id = event.message.from_id
+    message_text = event.message.text
+
+    status = get_status(user_id=user_id, group_id=group_id)[0]
+        
+    if status == "start":
+        
+        response, keybord, notify = start_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
+
+    elif status == "employer":
+        
+        response, keybord, notify = employer_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
+
+    elif status == "applicant":
+
+        response, keybord, notify = applicant_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
+
+    elif status == "editing":
+        
+        response, keybord, notify = editing_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
+
+    else:
+
+        response, keybord, notify = none_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
+        
+    return response, keybord, notify
 
 def main():
-    connection = create_connection()
 
-    # Вставьте ваш токен и ID группы ВКонтакте
-    vk_token = 'vk1.a.qpY3UvDhUjNx20an2VW7vC4C5KvcZ6sPIESA8EFjKHPjivnEriP9ToosXqvf_DfGgK_Qws9dA429c1GXFmdhDNlHUJfnIYe0yl-E1cl0uXf6a8XCUTcFFvMSaMSd9FAYIqM7GxiYfamEEwTFpjNuUoaK77P_0_fFpwhIeEl-rOf2FspO_XdHWJPilQk0BwZV4drYCsQaKRXnml0PtfwQrQ'
-    group_id = '221134261'
-
-    vk_session = vk_api.VkApi(token=vk_token)
-    vk = vk_session.get_api()
-    longpoll = VkBotLongPoll(vk_session, group_id)
-
-    keyboard = create_keyboard()
-
-    print("Бот запущен!")
-
-    for event in longpoll.listen():
-        if event.type == VkBotEventType.MESSAGE_NEW:
-            user_id = event.obj.message['from_id']
-            message = event.obj.message['text']
-
-            if "," in message:
-                keywords = [word.strip() for word in message.split(",")]
-                # Сохраняем ключевые слова для подписки в базу данных
-                keywords_str = ", ".join(keywords)
-                insert_subscription(connection, user_id, keywords_str)
-                response = "Вы успешно оформили подписку на ключевые слова:\n" + ", ".join(keywords)
-                send_text_message(vk, user_id, response)
-
-            elif "привет" in message.lower():
-                response = ("Доброго времени суток, у вас есть возможность абсолютно бесплатно оформить подписку "
-                            "на интересующую вас тематику, и как только будут опубликованы объявления с нужным содержимым, "
-                            "вы сразу получите их сообщением)")
-                send_text_message(vk, user_id, response)
-
-            elif "хорошо, спасибо!" in message.lower():
-                response = "Буду рад помочь!"
-                send_text_message(vk, user_id, response)
-
-            elif "давай попробуем" in message.lower():
-                response = "Введите ключевые слова для подписки через запятую (например, работа, квартира, авто):"
-                send_text_message(vk, user_id, response)
-
-            elif "отменить подписку" in message.lower():
-                response = "Вы успешно отменили подписку."
-                # Здесь можно добавить логику отмены подписки для конкретного пользователя
-                send_text_message(vk, user_id, response)
-
-            else:
-                response = "Простите, я не понимаю вашего запроса. Попробуйте снова."
-                send_text_message(vk, user_id, response)
-
-            if "привет" in message.lower():
-                response = ("Доброго времени суток, у вас есть возможность абсолютно бесплатно оформить подписку "
-                            "на интересующую вас тематику, и как только будут опубликованы объявления с нужным содержимым, "
-                            "вы сразу получите их сообщением)")
-                send_text_message_with_keyboard(vk, user_id, response, keyboard)
-
-
-            elif event.type == VkBotEventType.WALL_POST_NEW:
-            # Обработка новых постов на стене, как было ранее
-               post_id = event.obj.get('id')
-               if post_id is not None and post_id > get_last_post_id(connection, group_id):
-                # Получаем текст поста
-                post_text = event.obj.get('text')
-
-                # Проверяем, соответствует ли пост ключевым словам подписчиков
-                cursor = connection.cursor()
-                cursor.execute('SELECT user_id, keywords FROM subscriptions')
-                subscribers = cursor.fetchall()
-
-                for subscriber in subscribers:
-                     user_id, keywords = subscriber
-                     if keywords and any(keyword.lower() in post_text.lower() for keyword in keywords.split(',')):
-                        # Отправляем пост подписчику, если есть соответствие
-                        try:
-                            random_id = random.randint(1, 10**9)
-                            vk.messages.send(user_id=user_id, random_id=random_id)
-                            print(f"Пост отправлен подписчику {user_id}")
-                        except vk_api.VkApiError as e:
-                            print(f"Ошибка при отправке поста пользователю {user_id}: {e}")
-
-                # Обновляем последний ID поста в базе данных
-                set_last_post_id(connection, group_id, post_id)
+    print()
 
 
 if __name__ == "__main__":
