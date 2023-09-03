@@ -51,13 +51,14 @@ async def on_help(message: Message):
                          "Доступные команды:\n"
                          "/start - Начать общение с ботом\n"
                          "/help - Получить справку\n"
-                         "/get_top - получить номер в поиске")
-
-@dp.message_handler(commands=['start_wrapping'])
+                         "/get_top - получить номер в поиске\n"
+                         "/balance - текущий баланс счета")
+    
+@dp.message_handler(commands=['/balance'])
 async def on_help(message: Message):
     
-    wrapping.start_wrapping()
-    
+    balance = wrapping.get_balance()
+    await message.answer(f"Текущий баланс: {balance}")
 
 
 @dp.message_handler()
