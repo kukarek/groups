@@ -59,7 +59,15 @@ async def on_help(message: Message):
                          "VK=bool\n"
                          "TG=bool\n"
                          "status - состояние накрутки\n"
-                         "выражения пишуться через 1 пробел\n")
+                         "выражения пишуться через 1 пробел\n"
+                         "/balance - текущий баланс счета")
+                             
+@dp.message_handler(commands=['/balance'])
+async def on_help(message: Message):
+    
+    balance = wrapping.get_balance()
+    await message.answer(f"Текущий баланс: {balance}")
+                         
 
 @dp.message_handler(commands=['start_wrapping'])
 async def start_wrapping(message: Message):
@@ -71,8 +79,6 @@ async def status(message: Message):
     
     await message.answer(wrapping.status())
     
-
-
 @dp.message_handler()
 async def echo(message: Message):
     """
