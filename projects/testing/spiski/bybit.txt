@@ -1,382 +1,107 @@
-Bitcoin
-Ethereum
-USD Coin
-XRP
-Pepe
-Creditcoin
-Solana
-Mantle
-XRP
-INOFI
-Dogecoin
-Shiba Inu
-Litecoin
-Sui
-Cardano
-Binance USD
-Worldcoin
-Polygon
-Axelar
-tomiNet
-Chainlink
-Optimism
-GameSwift
-Arbitrum
-EGO
-TRON
-Hedera
-dYdX
-BNB
-Aptos
-Avalanche
-Caduceus
-Solana
-Sei
-Cosmos
-MOVEZ
-Stellar
-ApeCoin
-EOS
-Aave
-Polkadot
-Internet Computer
-Bitcoin Cash
-Vita Inu
-Mantle
-Metatime Coin
-Arbitrum
-Hashflow
-XRP
-WeWay
-Filecoin
-Uniswap
-Lingose
-Arkham
-Gala
-Fantom
-Compound
-Hashflow
-SingularityNET
-HAVAH
-Kava
-Injective
-Terra Classic
-Diamond Launch
-Shattered Legion
-Algorand
-Ethereum
-TAP FANTASY
-Cosplay Token
-Flow
-Izumi Finance
-Realis Network
-Toncoin
-Everscale
-Chainlink
-Vela Exchange
-TRON
-Blur
-Worldcoin
-Sui
-ALTAVA
-MVL
-Throne
-PLANET
-Curve DAO Token
-Render
-FTX Token
-Echelon Prime
-Mantle
-XDC Network
-Cardano
-DeFiChain
-The Graph
-Waves
-Polygon
-XCAD Network
-Stargate Finance
-Dai
-Decentraland
-NEAR Protocol
-Terra
-Decentralized Eternal Virtual Traveller
-Trust Wallet Token
-CyberConnect
-PUMLx
-Immutable
-Candy Pocket
-Kasta
-Synthetix
-GMX
-Medieval Empires
-The Sandbox
-MAGIC
-Chirpley
-Quant
-Lido DAO
-KONPAY
-Bella Protocol
-Eldarune
-RSS3
-Delysium
-Stellar
-Lido Staked ETH
-Salad
-Oasys
-Legion Network
-Pip
-Optimism
-SOUNI
-Avalanche
-Flare
-Monopoly Millionaire Control
-Tamadoge
-Litecoin
-Shattered Legion
-Walken
-ChainGPT
-Coin98
-GensoKishi Metaverse
-Ertha
-SEOR Network
-Linked Finance World
-Reality Metaverse
-KCAL
-Degen Zoo
-Polkadot
-MARBLEX
-Mask Network
-Ethereum Classic
-Rainmaker Games
-Maker
-Seedify.fund
-Bonk
-Shiba Inu
-StreamCoin
-Rocket Pool
-Radiant Capital
-STEPN
-Zamio
-VLaunch
-SushiSwap
-LooksRare
-WOO Network
-Core
-Filecoin
-1inch Network
-Corite
-Harmony
-MixMarvel
-Okratech Token
-1Sol
-Dogecoin
-MultiversX
-Saitama
-STAT
-Inter Milan Fan Token
-Horizen
-Milady Meme Coin
-MarsDAO
-Element.Black
-FLOKI
-ApeCoin
-Tether USDt
-Chiliz
-Arweave
-Klaydice
-Kryptomon
-X World Games
-Oasis Network
-Axie Infinity
-Baby Doge Coin
-THORChain
-Decentraland
-Gunstar Metaverse
-Cult DAO
-XCAD Network Play
-TENET
-Step App
-QMALL TOKEN
-Verasity
-Pepe 2.0
-Boba Network
-Mina
-Aptos
-Solana
-Velo
-Klaytn
-Stacks
-TomTomCoin
-Kunci Coin
-Galxe
-Pendle
-Sweat Economy
-Kusama
-PAX Gold
-Helium
-Okse
-Moonbeam
-Serum
-Tezos
-EthereumPoW
-Bitcoin
-Ordinals
-Enjin Coin
-Zebec
-EOS
-Celo
-Stellar
-Internet Computer
-Sologenic
-Litecoin
-Polygon
-Fame MMA
-Bitcoin
-Web3Camp
-Neon EVM
-Theta Network
-Bonfida
-The Sandbox
-Kryptonite
-Omega Network
-Ethereum Name Service
-SPACE ID
-LayerAI
-Arsenal Fan Token
-Amazy
-Fenerbahçe Token
-yearn.finance
-CropBytes
-MX TOKEN
-JasmyCoin
-Hashflow
-Aurigami
-Turbos Finance
-Alchemy Pay
-Zilliqa
-Chiliz
-Decentraland
-Frax Share
-Paris Saint-Germain Fan Token
-Polkadot
-Wrapped Bitcoin
-Algorand
-Monster Galaxy
-Ethereum
-WEMIX
-ApeX Protocol
-Telcoin
-TerraClassicUSD
-Everdome
-ApeX Protocol
-Kadena
-DigiByte
-The Sandbox
-BOB
-Basic Attention Token
-STEPN
-Terra Classic
-PancakeSwap
-Angola
-TaleCraft
-Biconomy
-SpartaDex
-Melos Studio
-Green Satoshi Token (SOL)
-Ravencoin
-Qtum
-Mundocrypto
-AVA
-ROND
-Moonriver
-PRIMAL
-LimeWire
-Hooked Protocol
-USDD
-Metaplex
-KOK
-ConstitutionDAO
-OpenBlox
-ICON
-Pintu Token
-NEM
-Access Protocol
-Ankr
-Realy
-eCash
-ParaSwap
-XANA
-Celsius
-0x Protocol
-Adventure Gold
-Loopring
-MagicCraft
-Pancake Games
-Decred
-Ren
-Manchester City Fan Token
-Gods Unchained
-Celo Dollar
-ssv.network
-Metatoken
-Symbiosis
-Secret
-Acala Token
-MonkeyLeague
-GM Wagmi
-OMG Network
-PLT
-SHILL Token
-BitTorrent(New)
-Galatasaray Fan Token
-Perpetual Protocol
-Symbol
-Smooth Love Potion
-Menzy
-Stader
-Flappymoonbird
-Wrapped Bitcoin
-AC Milan Fan Token
-Bitcoin Gold
-Siacoin
-MIBR Fan Token
-UMA
-Genopets
-Sun (New)
-Karate Combat
-APENFT
-RACA
-Lido DAO
-Pocket Network
-Chrono.tech
-Kryll
-Juventus Fan Token
-SIDUS
-WAX
-NYM
-InsurAce
-Holo
-SUIA
-IL CAPO OF CRYPTO
-Ternoa
-Nexo
-Metahero
-Forta
-Avalaunch
-OpenDAO
-Bancor
-JUST
-DEFY
-ECOx
-Gains Network
-Spell Token
-Threshold
-Cryowar
-Tribe
-Imperium Empires
-MOBLAND
-FC Barcelona Fan Token
-TRVL
-Ookeenga
-pSTAKE Finance
-Dopex
+BCHUSDT
+EOSUSDT
+LTCUSDC
+DYDXUSDT
+DOGEUSDC
+CRVUSDT
+SOLUSDC
+ARBUSDT
+CHZUSDT
+LINKUSDC
+DOTUSDC
+MANAUSDT
+SOLUSDT
+STXUSDT
+VINUUSDT
+LADYSUSDT
+FILUSDT
+ARKMUSDT
+ATOMUSDT
+ETHUSDC
+XDCUSDT
+IMXUSDT
+VELAUSDT
+SNXUSDT
+UNIUSDT
+TRXUSDT
+TOMIUSDT
+TONUSDT
+BLURUSDT
+MATICUSDC
+ETHUSDT
+DOTUSDT
+USDCUSDT
+BUSDUSDT
+MATICUSDT
+YFIUSDT
+AVAXUSDC
+BTCUSDT
+AGIXUSDT
+BTCUSDC
+SANDUSDT
+FTTUSDT
+GRTUSDT
+GALAUSDT
+INJUSDT
+AXSUSDT
+DFIUSDT
+XRPUSDT
+QNTUSDT
+MASKUSDT
+1INCHUSDT
+LDOUSDT
+WAVESUSDT
+APEUSDT
+SUSHIUSDT
+LINKUSDT
+OPUSDT
+DOGEUSDT
+LUNAUSDT
+PEPEUSDT
+NEARUSDT
+AVAXUSDT
+ADAUSDC
+SUIUSDT
+AXLUSDT
+FTMUSDT
+LTCUSDT
+BNBUSDT
+ETCUSDT
+XRPUSDC
+COMPUSDT
+VRAUSDT
+RNDRUSDT
+RUNEUSDT
+BELUSDT
+SHIBUSDT
+GMTUSDT
+APTUSDT
+HFTUSDT
+GMXUSDT
+LUNCUSDT
+AAVEUSDT
+MAGICUSDT
+DAIUSDT
+ICPUSDT
+ADAUSDT
+STETHUSDT
+PLANETUSDT
+COREUSDT
+CMPUSDT
+USDTEUR
+TWTUSDT
+CYBERUSDT
+SEIUSDT
+WLDUSDT
+MOVEZUSDT
+CGPTUSDT
+XLMUSDT
+APEXUSDT
+EVERUSDT
+HBARUSDT
+BOBUSDT
+FLOWUSDT
+ALGOUSDT
+IZIUSDT
+ZENUSDT
+MKRUSDT

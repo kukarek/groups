@@ -1,6 +1,13 @@
 from bs4 import BeautifulSoup
 import re
 import sqlite3
+import bybit
+import requests
+from pybit.unified_trading import HTTP
+import hashlib
+import hmac
+import time
+import asyncio
 
 bybit = 'C:\\Users\\Dmitry\\Documents\\softforgroups\\projects\\testing\\spiski\\bybit.txt'
 bitget = 'C:\\Users\\Dmitry\\Documents\\softforgroups\\projects\\testing\\spiski\\bitget.txt'
@@ -11,30 +18,29 @@ def extract_info(block):
     name = lines[1].strip()
     
     return name
-
+    
 
 def func():
-    # Чтение данных из файла
+
     with open('C:\\Users\\Dmitry\\Documents\\softforgroups\\projects\\testing\\data.txt', 'r', encoding='utf-8') as file:
-         data = file.read()
+         text = file.read()
 
-    blocks = re.split(r'\n\d+\n', data)
-    # Удаление пустых элементов и первого элемента (пустой)
-    blocks = list(filter(lambda x: x.strip() != '', blocks))[1:]
 
-    # Извлечение данных из каждого блока
-    coin_info = [extract_info(block) for block in blocks]
-    
-    names = ""
-    # Вывод информации о монетах с парой к USDT
-    for name in coin_info:
-        names = names + name + '\n'
+    pattern = r'\b(\w+/\w+)\b'  # Шаблон для поиска строк вида "COMP/USDT"
+    matches = re.findall(pattern, text)
+
+    symbols = ""
+
+    for match in matches:
+        symbols = symbols + match.replace('/', '') + "\n" # Удаляем слэш из найденных строк
 
     with open('C:\\Users\\Dmitry\\Documents\\softforgroups\\projects\\testing\\complied.txt', 'w', encoding='utf-8') as file:
-         file.write(names)
+         file.write(symbols)
 
 def func2():
-    
+    #создание таблицы из трех столбиков монет, каждый столбик - биржа
+    #3 столбика повторяющихся названий монет, чтобы видеть в каких биржах они пересекаются
+
     # Чтение данных из трех файлов
     with open(bybit, 'r', encoding='utf-8') as file1, open(bitget, 'r', encoding='utf-8') as file2, open(coinex, 'r', encoding='utf-8') as file3:
          coins1 = set(file1.read().splitlines())
@@ -67,10 +73,24 @@ def func2():
     for row in table:
         print("{:<20} {:<20} {:<20}".format(*row))
     
+    onecolumn = ""
+    for row in table:
+        if row[0] == "":
+            if row[1] == "":
+                onecolumn = onecolumn + row[2] + "\n"
+            else:
+                onecolumn = onecolumn + row[1] + "\n"
+        else:
+            onecolumn = onecolumn + row[0] + "\n"
+
+    print(onecolumn)
+
     return table
 
-def main():
+def func3():
     
+    #занесение списка монет в таблицу
+
     conn = sqlite3.connect('tokens_table.db')
     cursor = conn.cursor()
 
@@ -86,6 +106,13 @@ def main():
 
 
     conn.close()
+
+# Замените на свои API ключи Bybit
+# API_KEY = "o8q5N3zH1Q431eSpWJ"
+# API_SECRET = "xNnQqDdfrK9jp3jWdFwMDycHyXq9jwT5tDnt"
+
+
+def main():
 
     print()
 

@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
+#просто показывает место в топе обеих групп в вк
+
 def download_html(url, file_path):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'

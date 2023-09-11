@@ -32,7 +32,7 @@ async def on_start(message: Message):
 
 
 @dp.message_handler(commands=['get_top'])
-async def on_start(message: Message):
+async def get_top(message: Message):
    
     topchlb = vk_top.Get_top(url = url_chlb, group_id = group_id_chlb)
     topkzn = vk_top.Get_top(url = url_kzn, group_id = group_id_kzn)
@@ -62,12 +62,12 @@ async def on_help(message: Message):
                          "выражения пишуться через 1 пробел\n")
 
 @dp.message_handler(commands=['start_wrapping'])
-async def on_help(message: Message):
+async def start_wrapping(message: Message):
     
     wrapping.start_wrapping()
 
 @dp.message_handler(commands=['status'])
-async def on_help(message: Message):
+async def status(message: Message):
     
     await message.answer(wrapping.status())
     
