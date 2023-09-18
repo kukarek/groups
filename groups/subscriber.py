@@ -1,8 +1,9 @@
-import vk_api
-from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.keyboard import VkKeyboard, VkKeyboardColor
-import sqlite3
-import random
+import sql
+
+class Response:
+
+    print()
 
 # Создаем клавиатуры
 def create_start_keyboard():
@@ -10,316 +11,193 @@ def create_start_keyboard():
     keyboard_start = VkKeyboard(one_time=True)
 
     # Добавляем кнопки
-    keyboard_start.add_button('Хочу разместить вакансию', color=VkKeyboardColor.POSITIVE)
+    keyboard_start.add_button('Хочу разместить пост', color=VkKeyboardColor.POSITIVE)
     keyboard_start.add_button('Ищу работу', color=VkKeyboardColor.POSITIVE)
 
     return keyboard_start.get_keyboard()
 
-def create_applicant_keyboard():
+def create_employer_keyboard():
     
-    keyboard_applicant = VkKeyboard()
+    keyboard_employer = VkKeyboard()
 
     # Добавляем кнопки
-    keyboard_applicant.add_button('Редактировать ключевые слова', color=VkKeyboardColor.POSITIVE)
+    keyboard_employer.add_button('Позвать администратора', color=VkKeyboardColor.POSITIVE)
+    keyboard_employer.add_line()
+    keyboard_employer.add_button('Правила размещения', color=VkKeyboardColor.POSITIVE)
+    keyboard_employer.add_line()
+    keyboard_employer.add_button('Реквизиты', color=VkKeyboardColor.POSITIVE)
+    keyboard_employer.add_line()
+    keyboard_employer.add_button('Главное меню', color=VkKeyboardColor.POSITIVE)
+
+    return keyboard_employer.get_keyboard()
+
+def create_applicant_keyboard(keywords):
+    
+    keyboard_applicant = VkKeyboard(one_time=True)
+    
+    if keywords:
+        button_text = 'Редактировать ключевые слова'
+    else:
+        button_text = 'Добавить ключевые слова'
+
+    # Добавляем кнопки
+    keyboard_applicant.add_button(f'{button_text}', color=VkKeyboardColor.POSITIVE)
     keyboard_applicant.add_line()
-    keyboard_applicant.add_button('Просмотреть ключевые слова', color=VkKeyboardColor.POSITIVE)
-    keyboard_applicant.add_line()
+    if keywords:
+        keyboard_applicant.add_button('Просмотреть ключевые слова', color=VkKeyboardColor.POSITIVE)
+        keyboard_applicant.add_line()
     keyboard_applicant.add_button('Пример слов', color=VkKeyboardColor.POSITIVE)
     keyboard_applicant.add_line()
     keyboard_applicant.add_button('Главное меню', color=VkKeyboardColor.POSITIVE)
-    keyboard_applicant.add_line()
-    keyboard_applicant.add_button('Отменить подписку', color=VkKeyboardColor.NEGATIVE)
+    if keywords:
+        keyboard_applicant.add_line()
+        keyboard_applicant.add_button('Отменить подписку', color=VkKeyboardColor.NEGATIVE)
 
     return keyboard_applicant.get_keyboard()
 
-#sql запросы
-def set_status(user_id, status, group_id):
-   
-    if group_id == 22156807:
-        table = "kzn_users"
-    if group_id == 220670949:
-        table = "chlb_users"
-    
-    conn = sqlite3.connect('subscriptions.db')
-    cursor = conn.cursor()
-    # Запрос для обновления статуса по user_id
-    update_status_query = f'''
-    UPDATE {table}
-    SET status = ?
-    WHERE user_id = ?;
-    '''
-    # Выполнение запроса с передачей параметров new_status и user_id
-    cursor.execute(update_status_query, (status, user_id))
-    # Сохранение изменений и закрытие подключения к базе данных
-                
-    conn.commit()
-    conn.close()
-
-def set_keywords(user_id, keywords, group_id):
-    
-    if group_id == 22156807:
-        table = "kzn_users"
-    if group_id == 220670949:
-        table = "chlb_users"
-
-    keywords = keywords.lower()
-
-    conn = sqlite3.connect('subscriptions.db')
-    cursor = conn.cursor()
-    # Запрос для обновления ключевых слов
-    update_status_query = f'''
-    UPDATE {table}
-    SET keywords = ?
-    WHERE user_id = ?;
-    '''
-    cursor.execute(update_status_query, (keywords, user_id))
-    # Сохранение изменений и закрытие подключения к базе данных
-    conn.commit()
-    conn.close()
-
-def add_user(user_id, group_id):
-
-    if group_id == 22156807:
-        table = "kzn_users"
-    if group_id == 220670949:
-        table = "chlb_users"
-
-    #подключение в базе данных 
-    conn = sqlite3.connect('subscriptions.db')
-    cursor = conn.cursor()
-    #запрос на добавление нового юзера со статусом по умолчанию - start 
-    add_user_query = f'''
-    INSERT INTO {table} (user_id, status)
-    VALUES (?, ?);
-    '''
-    #Выполнение запроса с передачей параметров user_id и status
-    cursor.execute(add_user_query, (user_id, "start"))
-    # Сохранение изменений и закрытие подключения к базе данных
-    conn.commit()
-    conn.close()
-
-def remove_keywords(user_id, group_id):
-
-    if group_id == 22156807:
-        table = "kzn_users"
-    if group_id == 220670949:
-        table = "chlb_users"
-
-    # Подключение к базе данных
-    conn = sqlite3.connect('subscriptions.db')
-    cursor = conn.cursor()
-    # Запрос для очистки поля key_word по user_id
-    clear_keyword_query = f'''
-    UPDATE {table}
-    SET keywords = NULL
-    WHERE user_id = ?;
-    '''
-    # Выполнение запроса с передачей параметра user_id
-    cursor.execute(clear_keyword_query, (user_id,))
-    # Сохранение изменений и закрытие подключения к базе данных
-    conn.commit()
-    conn.close()
-
-def get_keywords(user_id, group_id):
-
-    if group_id == 22156807:
-        table = "kzn_users"
-    if group_id == 220670949:
-        table = "chlb_users"
-
-    conn = sqlite3.connect('subscriptions.db')
-    cursor = conn.cursor()
-    # Запрос для получения ключевых слов по user_id
-    get_keywords_query = f'''
-    SELECT keywords
-    FROM {table}
-    WHERE user_id = ? AND keywords IS NOT NULL;
-    '''
-    # Выполнение запроса с передачей параметра user_id
-    cursor.execute(get_keywords_query, (user_id,))
-    result = cursor.fetchone()
-    # Закрытие подключения к базе данных
-    conn.close()
-    return result
-
-def get_status(user_id, group_id):
-
-    if group_id == 22156807:
-        table = "kzn_users"
-    if group_id == 220670949:
-        table = "chlb_users"
-
-    conn = sqlite3.connect('subscriptions.db')
-    cursor = conn.cursor()
-
-    # Запрос для проверки наличия записи с заданным user_id
-    check_user_query = f'''
-    SELECT EXISTS (
-        SELECT 1
-        FROM {table}
-        WHERE user_id = ?
-        LIMIT 1
-    );
-    '''
-    # Выполнение запроса с передачей параметра user_id
-    cursor.execute(check_user_query, (user_id,))
-    result = cursor.fetchone()[0]
-    conn.commit()
-    conn.close()
-    
-    if result == 1:
-       conn = sqlite3.connect('subscriptions.db')
-       cursor = conn.cursor()
-       # Запрос для получения статуса по user_id
-       get_status_query = f'''
-       SELECT status
-       FROM {table}
-       WHERE user_id = ?;
-       '''
-       # Выполнение запроса с передачей параметра user_id
-       cursor.execute(get_status_query, (user_id,))
-       status = cursor.fetchone()
-
-       conn.commit()
-       conn.close()
-
-       return status
-    
-    else:
-       return "0"
-    
-def get_users_data_as_dict(group_id): 
-    
-    if group_id == -22156807:
-        table = "kzn_users"
-    if group_id == -220670949:
-        table = "chlb_users" 
-
-    conn = sqlite3.connect('subscriptions.db')
-    cursor = conn.cursor()
-
-    select_users_query = f'''
-    SELECT user_id, keywords
-    FROM {table}
-    WHERE keywords IS NOT NULL;
-    '''
-
-    cursor.execute(select_users_query)
-    user_data_rows = cursor.fetchall()
-
-    users_data = [{"user_id": row[0], "keywords": row[1]} for row in user_data_rows]
-
-    conn.close()
-    return users_data
-
-#созданию соединения (не используется в коде)
-def create_connection():
-    connection = sqlite3.connect('subscriptions.db')
-    cursor = connection.cursor()
-
-    # Создаем таблицу для хранения подписок пользователей, если она не существует
-    cursor.execute('''CREATE TABLE IF NOT EXISTS kzn_users
-                      (user_id INTEGER PRIMARY KEY, keywords TEXT, status TEXT)''')
-
-    connection.commit()
-
-    cursor.execute('''CREATE TABLE IF NOT EXISTS chlb_users
-                      (user_id INTEGER PRIMARY KEY, keywords TEXT, status TEXT)''')
-
-    connection.commit()
-    connection.close()
-
 #обработка сообщений, учитывая статус юзера, каждая функция должна возвращать текст ответа, клавиутуру, необходимость уведомить админа
-def start_status_handler(user_id, message_text, group_id):
+def none_status_handler(user_id, message_text, group_id):
     
+    if message_text == '/start' or message_text.lower() == 'start' or message_text == 'старт' or message_text.lower() == 'начать' or message_text.lower() == 'запустить':
+         
+        sql.add_user(user_id=user_id, group_id=group_id) #запись нового пользователя в бд, статус по умочланию = start
+        return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
+        
+    else: 
+        return None, None, True #бот не обрабатывает сообщение, уведомляет админа
+
+def start_status_handler(user_id, message_text, group_id):
     
     if message_text == 'Хочу разместить вакансию':
         
-        set_status(user_id=user_id, status="employer", group_id=group_id)
+        sql.set_status(user_id=user_id, status="employer", group_id=group_id)
         
-        return 'Сейчас вам ответит администратор!', None, True
+        return 'Выберите действие на клавиатуре:', create_employer_keyboard(), None
 
     elif message_text == 'Ищу работу':
         
-        set_status(user_id=user_id, status="applicant", group_id=group_id)
+        sql.set_status(user_id=user_id, status="applicant", group_id=group_id)
+        keywords = sql.get_keywords(user_id=user_id, group_id=group_id)
         
-        return 'Выберите действие на клавиатуре:', create_applicant_keyboard(), None
+        return 'Выберите действие на клавиатуре:', create_applicant_keyboard(keywords=keywords), None
 
     else:
-
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
 
 def employer_status_handler(user_id, message_text, group_id):
 
+    if message_text == "/start" or message_text == "Главное меню": #откат до статуса старт
+
+        sql.set_status(user_id=user_id, status="start", group_id=group_id)
+
+        return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
+    
+    elif message_text == "Правила размещения":
+        
+        if group_id == 22156807:
+            link = "https://vk.com//@rabotakazank-vakans"
+        if group_id == 220670949:
+            link = "https://vk.com//@rabotachelyabynsk-vakans"
+
+        return link, None, None
+    
+    elif message_text == "Реквизиты":
+        
+        text = '+7(986)913-68-24\nДмитрий(сбер/тинькофф)\n\nЛибо по СБП\nhttps://qr.nspk.ru/BS1A007PS0I8FECQ8EHRG2776H572NUP?type=01&bank=100000000004&crc=5453'
+
+        return text, None, None
+
+    elif message_text == "Позвать администратора":
+
+        sql.set_status(user_id=user_id, status="employer_and_admin", group_id=group_id)
+
+        return 'Сейчас вам ответит администратор!', None, True        
+
+    else:
+        return 'Выберите действие на клавиатуре:', None, None 
+    
+def employer_and_admin_status_handler(user_id, message_text, group_id):
+
     if message_text == "/start": #откат до статуса старт
 
-        set_status(user_id=user_id, status="start", group_id=group_id)
+        sql.set_status(user_id=user_id, status="start", group_id=group_id)
 
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
     
     else:
-        return None, None, True #бот не обрабатывает сообщение, уведомляет админа 
+        return None, None, True #бот не обрабатывает сообщение, переписка с админом 
 
 def editing_status_handler(user_id, message_text, group_id):
     
-    if message_text == "/start":
-
-        remove_keywords(user_id=user_id, group_id=group_id)
-        set_status(user_id=user_id, status="start", group_id=group_id)
+    if message_text == "/start" or message_text == "Главное меню":
+        
+        sql.remove_keywords(user_id=user_id, group_id=group_id)
+        sql.set_status(user_id=user_id, status="start", group_id=group_id)
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
     
-    elif message_text == "" or message_text == "Отменить подписку":
+    elif message_text == "": #если человек отправляет вложение без текста
+        
+        return 'Отправьте текст с ключевыми словами через запятую!', create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
 
-        remove_keywords(user_id=user_id, group_id=group_id)
-        set_status(user_id=user_id, status="applicant", group_id=group_id)  
-        return "Подписка отменена!", None, None
+    elif message_text == "Отменить подписку":
+
+        sql.remove_keywords(user_id=user_id, group_id=group_id)
+        sql.set_status(user_id=user_id, status="applicant", group_id=group_id)  
+        return "Подписка отменена!", create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
     
+    elif message_text == "Редактировать ключевые слова" or message_text == "Добавить ключевые слова":
+        
+        return "Отправьте ключевые слова через запятую", create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
+
+    elif message_text == "Просмотреть ключевые слова":
+        
+        words = sql.get_keywords(user_id=user_id, group_id=group_id)
+        if words:
+            return words[0], None, None
+        else:
+            return "У вас нет ключевых слов для подписки :(", create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
+
+    elif message_text == "Пример слов":
+        return "без опыта, официант, бармен, подработка, стройка, шабашка, оплата сразу", create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
+
     else:
-        set_keywords(user_id=user_id,keywords=message_text, group_id=group_id)
-        set_status(user_id=user_id, status="applicant", group_id=group_id)   
-        return "Подписка по вашим ключевым словам - активна!", None, None
+        
+        sql.set_keywords(user_id=user_id,keywords=message_text, group_id=group_id)
+        sql.set_status(user_id=user_id, status="applicant", group_id=group_id)   
+        return "Подписка по вашим ключевым словам - активна!", create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
 
 def applicant_status_handler(user_id, message_text, group_id):
    
     if message_text == "/start" or message_text == "Главное меню": #откат до статуса старт
         
-        remove_keywords(user_id=user_id, group_id=group_id)
-        set_status(user_id=user_id, status="start", group_id=group_id) 
+        sql.remove_keywords(user_id=user_id, group_id=group_id)
+        sql.set_status(user_id=user_id, status="start", group_id=group_id) 
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
     
-    elif message_text == "Редактировать ключевые слова":
+    elif message_text == "Редактировать ключевые слова" or message_text == "Добавить ключевые слова":
         
-        set_status(user_id=user_id, status="editing", group_id=group_id)
-        return "Отправьте ключевые слова через запятую", None, None
+        sql.set_status(user_id=user_id, status="editing", group_id=group_id)
+
+        return "Отправьте ключевые слова через запятую", create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
 
     elif message_text == "Просмотреть ключевые слова":
         
-        words = get_keywords(user_id=user_id, group_id=group_id)
+        words = sql.get_keywords(user_id=user_id, group_id=group_id)
         if words:
-            return words[0], None, None
+            return words[0], create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
         else:
-            return "У вас нет ключевых слов для подписки :(", None, None
+            return "У вас нет ключевых слов для подписки :(", create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
 
     elif message_text == "Пример слов":
-        return "без опыта, официант, бармен, подработка, стройка, шабашка, оплата сразу", None, None
+        return "без опыта, официант, бармен, подработка, стройка, шабашка, оплата сразу", create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
 
     elif message_text == "Отменить подписку":
 
-        remove_keywords(user_id=user_id, group_id=group_id)
-        return "Подписка отменена!", None, None
+        sql.remove_keywords(user_id=user_id, group_id=group_id)
+        return "Подписка отменена!", create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
 
     else:
-        return 'Выберите действие на клавиатуре:', create_applicant_keyboard(), None
-
-def none_status_handler(user_id, message_text, group_id):
-    
-    if message_text == '/start' or message_text.lower() == 'start' or message_text == 'старт' or message_text.lower() == 'начать' or message_text.lower() == 'запустить':
-         
-        add_user(user_id=user_id, group_id=group_id) #запись нового пользователя в бд, статус по умочланию = start
-        return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
-        
-    else: 
-        return None, None, True #бот не обрабатывает сообщение, уведомляет админа
+        return 'Выберите действие на клавиатуре:', create_applicant_keyboard(keywords=sql.get_keywords(user_id=user_id, group_id=group_id)), None
 
 #функция поиска соответствий в тексте
 def find_matching_users(users_data, post_text):
@@ -344,7 +222,7 @@ def post_handler(post):
 
     group_id = post.owner_id
 
-    users_data = get_users_data_as_dict(group_id=group_id) #получаем данные из бд в словарь
+    users_data = sql.get_users_data_as_dict(group_id=group_id) #получаем данные из бд в словарь
     
     matching_users = find_matching_users(users_data=users_data, post_text=post.text) #функция поиска соответствий
 
@@ -356,36 +234,28 @@ def reply_message_handler(event):
     group_id = event.group_id
     user_id = event.message.from_id
     message_text = event.message.text
-
-    status = get_status(user_id=user_id, group_id=group_id)[0]
+                                    
+    status = sql.get_status(user_id=user_id, group_id=group_id)[0]
         
     if status == "start":
-        
         response, keybord, notify = start_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
 
     elif status == "employer":
-        
+        response, keybord, notify = employer_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
+
+    elif status == "employer_and_admin":
         response, keybord, notify = employer_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
 
     elif status == "applicant":
-
         response, keybord, notify = applicant_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
 
     elif status == "editing":
-        
         response, keybord, notify = editing_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
 
     else:
-
         response, keybord, notify = none_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
         
     return response, keybord, notify
 
-def main():
 
-    print()
-
-
-if __name__ == "__main__":
-    main()
 

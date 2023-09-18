@@ -46,22 +46,22 @@ def Get_top(url, group_id):
         group_strings = extract_group_strings(cleaned_html)
         a = len(group_strings)
         for i in range(a):
-
-          if group_strings[i].find(group_id) != -1:
-              top = i+1
+                          
+            if group_strings[i].find(group_id) != -1:
+                top = i+1
 
       except requests.exceptions.HTTPError as http_err:
-        print(f"HTTP error occurred: {http_err}")
+          print(f"HTTP error occurred: {http_err}")
       except Exception as err:
-        print(f"An error occurred: {err}")
+          print(f"An error occurred: {err}")
 
       if(top == 0):
-        return 40
+          return 40
       else:
-        return top
+          return top
 
 def main():
-   print(Get_top())
+    print(Get_top())
 
 if __name__ == "__main__":
-   main()
+    main()

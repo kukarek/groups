@@ -62,8 +62,8 @@ async def on_help(message: Message):
                          "выражения пишуться через 1 пробел\n"
                          "/balance - текущий баланс счета")
                              
-@dp.message_handler(commands=['/balance'])
-async def on_help(message: Message):
+@dp.message_handler(commands=['balance'])
+async def balance(message: Message):
     
     balance = wrapping.get_balance()
     await message.answer(f"Текущий баланс: {balance}")
@@ -139,6 +139,11 @@ async def echo(message: Message):
 
         wrapping.States.VK = VK
         wrapping.States.TG = TG
+     
+     elif text == 'start_timer':
+         
+        wrapping.start_timer()
+        await message.answer("Запущена автоматическая накрутка постов c 8:30 утра!")
 
      else:
         await message.answer(f"Вы написали: {message.text}")
