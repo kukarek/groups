@@ -1,0 +1,12 @@
+[Unit]
+Description=My Python Script Service
+After=network.target
+
+[Service]
+User=root
+ExecStart=/root/groups/desktop/bin/python3.9 /root/groups/launcher.py
+WorkingDirectory=/root/groups
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

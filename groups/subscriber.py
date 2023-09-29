@@ -11,10 +11,21 @@ def create_start_keyboard():
     keyboard_start = VkKeyboard(one_time=True)
 
     # Добавляем кнопки
-    keyboard_start.add_button('Хочу разместить пост', color=VkKeyboardColor.POSITIVE)
+    keyboard_start.add_button('Хочу разместить вакансию', color=VkKeyboardColor.POSITIVE)
     keyboard_start.add_button('Ищу работу', color=VkKeyboardColor.POSITIVE)
 
     return keyboard_start.get_keyboard()
+
+def create_employerandadmin_keyboard():
+
+    keyboard = VkKeyboard()
+
+    keyboard.add_button('Правила размещения', color=VkKeyboardColor.POSITIVE)
+    keyboard.add_line()
+    keyboard.add_button('Реквизиты', color=VkKeyboardColor.POSITIVE)
+    keyboard.add_line()
+    keyboard.add_button('Главное меню', color=VkKeyboardColor.POSITIVE)
+    return keyboard.get_keyboard()
 
 def create_employer_keyboard():
     
@@ -111,18 +122,33 @@ def employer_status_handler(user_id, message_text, group_id):
 
         sql.set_status(user_id=user_id, status="employer_and_admin", group_id=group_id)
 
-        return 'Сейчас вам ответит администратор!', None, True        
+        return 'Сейчас вам ответит администратор!', create_employerandadmin_keyboard, True        
 
     else:
         return 'Выберите действие на клавиатуре:', None, None 
     
 def employer_and_admin_status_handler(user_id, message_text, group_id):
 
-    if message_text == "/start": #откат до статуса старт
+    if message_text == "/start" or message_text == "Главное меню": #откат до статуса старт
 
         sql.set_status(user_id=user_id, status="start", group_id=group_id)
 
         return 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?', create_start_keyboard(), None
+    
+    elif message_text == "Правила размещения":
+        
+        if group_id == 22156807:
+            link = "https://vk.com//@rabotakazank-vakans"
+        if group_id == 220670949:
+            link = "https://vk.com//@rabotachelyabynsk-vakans"
+
+        return link, None, None
+    
+    elif message_text == "Реквизиты":
+        
+        text = '+7(986)913-68-24\nДмитрий(сбер/тинькофф)\n\nЛибо по СБП\nhttps://qr.nspk.ru/BS1A007PS0I8FECQ8EHRG2776H572NUP?type=01&bank=100000000004&crc=5453'
+
+        return text, None, None
     
     else:
         return None, None, True #бот не обрабатывает сообщение, переписка с админом 
@@ -244,7 +270,7 @@ def reply_message_handler(event):
         response, keybord, notify = employer_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
 
     elif status == "employer_and_admin":
-        response, keybord, notify = employer_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
+        response, keybord, notify = employer_and_admin_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)
 
     elif status == "applicant":
         response, keybord, notify = applicant_status_handler(user_id=user_id,message_text=message_text, group_id=group_id)

@@ -80,7 +80,6 @@ class States: #содежит состояния накрутки
     message = None
 
 active_threads = [] #отслеживание активных потоков
-active_timer_threads = []
 
 def status():
           
@@ -91,16 +90,17 @@ def status():
     else:
         return f"автонакрутка неактивна"
 
-def start_wrapping(cycle = 0, VK = True, TG = True):
+def start_wrapping(cycle = 0, VK = True, TG = True, timer = 0):
  
     if not active_threads:
-        t1 = threading.Thread(target=wrapping, args=(cycle, VK, TG))
+        t1 = threading.Thread(target=wrapping, args=(cycle, VK, TG, timer))
         t1.start()
         active_threads.append(t1)
         return True  #поток запущен
     else:
         return False  #поток не запущен
     
+'''  
 def start_timer():
  
     if not active_timer_threads:
@@ -110,9 +110,8 @@ def start_timer():
         return True  #поток запущен
     else:
         return False  #поток не запущен
-   
 # Запускаем метод каждый день в 8 утра
-schedule.every().day.at("08:30").do(start_wrapping)
+schedule.every().day.at("12:02").do(start_wrapping)
   
 def Timer():
     while True:
@@ -120,21 +119,21 @@ def Timer():
             break
         schedule.run_pending()
         time.sleep(1)
-
-def wrapping(cycle, VK, TG): 
+'''
+def wrapping(cycle, VK, TG, timer): 
   
     States.VK = VK
     States.TG = TG
     States.stop = False
     i = cycle
     
+    time.sleep(timer*60) #отложенный запуск накрутки
+
     try:
         while i < 28:    #цикл на 14 часов, каждые 30 минут 
             if States.stop == False:    
                 kzn_posts_id = get_vk_posts_id(kzn_url)
-                chlb_posts_id = get_vk_posts_id(chlb_url)
                 tg_kzn_posts_id = get_tg_posts_id(tg_kzn_url)
-                tg_chlb_posts_id = get_tg_posts_id(tg_chlb_url)
             
                 if i < 20:
             
@@ -147,20 +146,12 @@ def wrapping(cycle, VK, TG):
                             params = dict(key=API_KEY, action="add", service=879, link=f"https://vk.com/wall-{kzn_posts_id[j]}", quantity=quantity)
                             res = requests.get(API_URL, params=params)
                             print(f"kzn {str(res.json())}")
-
-                            params = dict(key=API_KEY, action="add", service=879, link=f"https://vk.com/wall-{chlb_posts_id[j]}", quantity=quantity)
-                            res = requests.get(API_URL, params=params)
-                            print(f"chlb {str(res.json())}")
                         
                         if States.TG:
                         
                             params = dict(key=API_KEY, action="add", service=614, link=f"https://t.me/rabotakazank/{tg_kzn_posts_id[j]}", quantity=100)
                             res = requests.get(API_URL, params=params)
                             print(f"tg kzn {str(res.json())}")
-
-                            params = dict(key=API_KEY, action="add", service=614, link=f"https://t.me/rabotachelyabinski/{tg_chlb_posts_id[j]}", quantity=100)
-                            res = requests.get(API_URL, params=params)
-                            print(f"tg chlb {str(res.json())}")
 
                         if j == 4:
                             print("накрутка последних четырех!")
@@ -178,21 +169,13 @@ def wrapping(cycle, VK, TG):
                             params = dict(key=API_KEY, action="add", service=879, link=f"https://vk.com/wall-{kzn_posts_id[k]}", quantity=quantity)
                             res = requests.get(API_URL, params=params)
                             print(f"kzn {str(res.json())}")
-
-                            params = dict(key=API_KEY, action="add", service=879, link=f"https://vk.com/wall-{chlb_posts_id[k]}", quantity=quantity)
-                            res = requests.get(API_URL, params=params)
-                            print(f"chlb {str(res.json())}")
             
                         if States.TG:
                 
                             params = dict(key=API_KEY, action="add", service=614, link=f"https://t.me/rabotakazank/{tg_kzn_posts_id[k]}", quantity=100)
                             res = requests.get(API_URL, params=params)
                             print(f"tg kzn {str(res.json())}")
-
-                            params = dict(key=API_KEY, action="add", service=614, link=f"https://t.me/rabotachelyabinski/{tg_chlb_posts_id[k]}", quantity=100)
-                            res = requests.get(API_URL, params=params)
-                            print(f"tg chlb {str(res.json())}")
-            
+                            
                         if k == 9:
                             print("накрутка последних десяти!")
             

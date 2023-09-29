@@ -87,7 +87,8 @@ def main():
 
                     if notify == True: #уведомление админа
                         vk.messages.send(user_id=732405775, message=f"Новое сообщение! '{event.message.text}'", random_id=0)
-
+                        vk.messages.send(user_id=155514468, message=f"Новое сообщение! '{event.message.text}'", random_id=0)
+                    
                     if reply != None: #отправка ответа юзеру с клавиатурой, либо без нее
                         if keybord != None:
                             vk.messages.send(user_id=event.message.from_id, message=reply, random_id=0, keyboard=keybord)

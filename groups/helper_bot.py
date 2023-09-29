@@ -89,6 +89,7 @@ async def echo(message: Message):
     cycle = 0
     VK = True
     TG = True
+    timer = 0
 
     text = message.text
     
@@ -116,8 +117,13 @@ async def echo(message: Message):
             if sss == "False":
                TG = False
 
-        if wrapping.start_wrapping(cycle=cycle,VK=VK,TG=TG):
-           await message.answer(f"Запуск накрутки: cycle={cycle}, VK={VK}, TG={TG}")
+        if text.find("timer") != -1:
+            ss =  text.split('timer=')[1]
+            sss = ss.split(' ')[0]
+            timer = int(sss)
+
+        if wrapping.start_wrapping(cycle=cycle,VK=VK,TG=TG, timer=timer):
+           await message.answer(f"Запуск накрутки: cycle={cycle}, VK={VK}, TG={TG}, timer={timer}")
         else:
            await message.answer("Накрутка уже запущена, либо поток еще не завершил свой крайний цикл")
 
@@ -140,10 +146,10 @@ async def echo(message: Message):
         wrapping.States.VK = VK
         wrapping.States.TG = TG
      
-     elif text == 'start_timer':
+     #elif text == 'start_timer':
          
-        wrapping.start_timer()
-        await message.answer("Запущена автоматическая накрутка постов c 8:30 утра!")
+        #wrapping.start_timer()
+        #await message.answer("Запущена автоматическая накрутка постов c 8:30 утра!")
 
      else:
         await message.answer(f"Вы написали: {message.text}")
