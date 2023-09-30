@@ -8,6 +8,7 @@ from aiogram import Bot
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 import subscriber
+import helper_bot
 
 
 # Укажите токен VK бота и Telegram бота
@@ -49,6 +50,14 @@ async def send_telegram(image, caption):
 
     await bot.close()
 
+async def notify_in_tg(text):
+
+    bot = Bot(token=TELEGRAM_TOKEN)
+
+    await bot.send_message(chat_id="-1001796549989", text=text)
+
+    await bot.close()
+
 
 def send_to_telegram(event):
    
@@ -87,7 +96,7 @@ def main():
 
                     if notify == True: #уведомление админа
                         vk.messages.send(user_id=732405775, message=f"Новое сообщение! '{event.message.text}'", random_id=0)
-                        vk.messages.send(user_id=155514468, message=f"Новое сообщение! '{event.message.text}'", random_id=0)
+                        asyncio.run(notify_in_tg(f"Новое сообщение! '{event.message.text}'"))
                     
                     if reply != None: #отправка ответа юзеру с клавиатурой, либо без нее
                         if keybord != None:
@@ -96,7 +105,7 @@ def main():
                             vk.messages.send(user_id=event.message.from_id, message=reply, random_id=0)   
                 
 
-                if event.type == VkBotEventType.WALL_POST_NEW:
+                if event.type == VkBotEventType.WALL_POST_NEW and event.obj['from_id'] == -22156807:
                     #id группы = event.object.owner_id
                     send_to_telegram(event=event) #пересылка поста в телеграм канал
                     users = subscriber.post_handler(event.object) #тянем из бд список подписчиков, чьи слова совпадают 
