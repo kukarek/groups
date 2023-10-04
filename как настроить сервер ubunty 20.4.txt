@@ -22,6 +22,7 @@ Python 3.9 может не входить в стандартный репози
 Установите необходимые библиотеки с помощью pip, который, как правило, устанавливается автоматически вместе с Python:
 
   sudo apt install python3.9-distutils
+  apt install curl
   curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
   sudo python3.9 get-pip.py
 
