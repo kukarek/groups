@@ -44,19 +44,22 @@ async def count(message: Message):
 async def get_photo(message: Message):
 
     images = image_handler.start_combine()
-    input_media_images = []
-    
-    i = 0
 
-    while i < len(images) - 1:
-        image_stream = BytesIO()
-        images[i].save(image_stream, format='JPEG')
-        image_stream.seek(0)
-        input_media_images.append(InputMediaPhoto(media=image_stream)) 
-        i = i + 1   
+    if images:
 
-    print("Фото отправлены!")
-    await message.answer_media_group(media = input_media_images) 
+        input_media_images = []
+        
+        i = 0
+
+        while i < len(images) - 1:
+            image_stream = BytesIO()
+            images[i].save(image_stream, format='JPEG')
+            image_stream.seek(0)
+            input_media_images.append(InputMediaPhoto(media=image_stream)) 
+            i = i + 1   
+
+        print("Фото отправлены!")
+        await message.answer_media_group(media = input_media_images) 
 
 def main():
     # Запуск бота

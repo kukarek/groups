@@ -6,7 +6,8 @@ import requests
 
 overlay_folder = "overlay"
 backgrounds_list = "backgrounds.txt"
-results_folder = "results"
+
+footage_folder = "root"
 
 
 overlay_dict = {}
@@ -25,16 +26,11 @@ def start_combine():
             
             # Добавляем изображение в словарь, используя имя файла как ключ
             overlay_dict[filename] = image
-            image.close()
 
     #получение рандомной ссылки на фото из списка ссылок фонов
     with open(backgrounds_list, 'r') as file:
         # Прочитайте строки из файла и создайте массив ссылок
         links = [line.strip() for line in file]
-
-    # Выберите случайный элемент из массива ссылок
-    if not links:
-        return
 
     random_link1 = random.choice(links)
     random_link2 = random.choice(links)
@@ -42,18 +38,14 @@ def start_combine():
     #запрос на получение картинки
     response1 = requests.get(random_link1)
     response2 = requests.get(random_link2)
-
-    # Проверка успешности загрузки
-    if response1.status_code != 200 or response2.status_code != 200:
-        return
     
     background1 = Image.open(BytesIO(response1.content))
     background2 = Image.open(BytesIO(response2.content))
 
     
-    
     result_images = []
     i = 1
+
     for overlay in sorted(overlay_dict):
         if i % 2 == 0:
             image = combine(overlay_image=overlay_dict[overlay], background_image=background1, result_name=overlay)
@@ -61,7 +53,7 @@ def start_combine():
             image = combine(overlay_image=overlay_dict[overlay], background_image=background2, result_name=overlay)
         i = i + 1
         result_images.append(image)
-
+    
     background1.close()
     background2.close()
     image.close()   
