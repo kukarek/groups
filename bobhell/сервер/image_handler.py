@@ -7,7 +7,7 @@ import requests
 overlay_folder = "overlay"
 backgrounds_list = "backgrounds.txt"
 
-footage_folder = "root"
+footage_folder = ""
 
 
 overlay_dict = {}
@@ -15,6 +15,8 @@ overlay_dict = {}
 def start_combine():
 
     #получение спика фоток для наложения
+    overlay_dict = {}
+
     for filename in os.listdir(overlay_folder):
         # Проверяем, что файл имеет расширение изображения (например, .jpg или .png)
         if filename.endswith((".jpg", ".png")):
@@ -67,6 +69,9 @@ def start_combine():
         for link in links:
             file.write(link + '\n')
 
+    for image in overlay_dict:
+        overlay_dict[image].close()
+
     return result_images
 
     
@@ -109,7 +114,7 @@ def combine(overlay_image, background_image, result_name):
     result = background_image.copy()
     result.paste(overlay_image, (x, y))
 
-    footage = Image.open(f"footage{random.randint(1,4)}.png")
+    footage = Image.open(f"{footage_folder}footage{random.randint(1,4)}.png")
 
     # Получаем размеры футажа и фона
     overlay_width, overlay_height = footage.size

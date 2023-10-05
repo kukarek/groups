@@ -9,7 +9,7 @@ from aiogram.types import InputMediaPhoto
 from PIL import Image
 
 
-API_TOKEN = '6687202213:AAEl9SKJN-9xPPE37A3Z5WEYLMfZlKtTI1Y'  # Замените YOUR_TELEGRAM_BOT_TOKEN на ваш токен
+API_TOKEN = '6516087703:AAFogf1wdiNFFkolsNWMjOvSXj0BN3ypi5g'  # Замените YOUR_TELEGRAM_BOT_TOKEN на ваш токен
 
 # Установка уровня логирования
 logging.basicConfig(level=logging.INFO)

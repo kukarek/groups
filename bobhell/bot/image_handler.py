@@ -6,15 +6,15 @@ import requests
 
 overlay_folder = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\overlay"
 backgrounds_list = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\backgrounds.txt"
-results_folder = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\results"
 
 footage_folder = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell"
 
-overlay_dict = {}
 
 def start_combine():
 
     #получение спика фоток для наложения
+    overlay_dict = {}
+
     for filename in os.listdir(overlay_folder):
         # Проверяем, что файл имеет расширение изображения (например, .jpg или .png)
         if filename.endswith((".jpg", ".png")):
@@ -32,34 +32,28 @@ def start_combine():
         # Прочитайте строки из файла и создайте массив ссылок
         links = [line.strip() for line in file]
 
-    # Выберите случайный элемент из массива ссылок
-    if links:
-        random_link1 = random.choice(links)
-        random_link2 = random.choice(links)
+    random_link1 = random.choice(links)
+    random_link2 = random.choice(links)
 
     #запрос на получение картинки
     response1 = requests.get(random_link1)
     response2 = requests.get(random_link2)
-
-    # Проверка успешности загрузки
-    if response1.status_code != 200 or response2.status_code != 200:
-        return
     
     background1 = Image.open(BytesIO(response1.content))
     background2 = Image.open(BytesIO(response2.content))
 
     
-    
     result_images = []
     i = 1
-    for overlay in overlay_dict:
+
+    for overlay in sorted(overlay_dict):
         if i % 2 == 0:
             image = combine(overlay_image=overlay_dict[overlay], background_image=background1, result_name=overlay)
         else:
             image = combine(overlay_image=overlay_dict[overlay], background_image=background2, result_name=overlay)
         i = i + 1
         result_images.append(image)
-
+    
     background1.close()
     background2.close()
     image.close()   
@@ -72,6 +66,9 @@ def start_combine():
     with open(backgrounds_list, 'w') as file:
         for link in links:
             file.write(link + '\n')
+
+    for image in overlay_dict:
+        overlay_dict[image].close()
 
     return result_images
 
@@ -115,7 +112,7 @@ def combine(overlay_image, background_image, result_name):
     result = background_image.copy()
     result.paste(overlay_image, (x, y))
 
-    footage = Image.open(f"{footage_folder}\\footage{random.randint(1,4)}.png")
+    footage = Image.open(f"{footage_folder}//footage{random.randint(1,4)}.png")
 
     # Получаем размеры футажа и фона
     overlay_width, overlay_height = footage.size
