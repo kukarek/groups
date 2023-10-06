@@ -10,6 +10,14 @@ backgrounds_list = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\backgrounds
 footage_folder = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell"
 
 
+def clear_overlays():
+    # Получаем список файлов и подпапок в папке
+    files = os.listdir(overlay_folder)
+    for file in files:
+        if file != "a.jpg":
+            file_path = os.path.join(overlay_folder, file)
+            os.remove(file_path)
+
 def start_combine():
 
     #получение спика фоток для наложения
