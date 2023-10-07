@@ -24,6 +24,7 @@ threads = []
 # Установка уровня логирования
 logging.basicConfig(level=logging.INFO)
 
+
 # Инициализация бота и диспетчера
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
