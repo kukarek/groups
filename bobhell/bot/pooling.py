@@ -12,7 +12,7 @@ import time
 import asyncio
 import subprocess
 
-API_TOKEN = '6516087703:AAFogf1wdiNFFkolsNWMjOvSXj0BN3ypi5g'  # Замените YOUR_TELEGRAM_BOT_TOKEN на ваш токен
+API_TOKEN = '6588918438:AAEuWOePbDIWlDufBsnHTku9wj9oHlU5IrQ'  # Замените YOUR_TELEGRAM_BOT_TOKEN на ваш токен
 
 admins = [1020541698, 6108609160]
 
