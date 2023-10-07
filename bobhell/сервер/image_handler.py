@@ -9,9 +9,6 @@ backgrounds_list = "backgrounds.txt"
 
 footage_folder = ""
 
-
-overlay_dict = {}
-
 def clear_overlays():
     # Получаем список файлов и подпапок в папке
     files = os.listdir(overlay_folder)

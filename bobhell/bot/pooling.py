@@ -18,6 +18,9 @@ admins = [1020541698, 6108609160]
 
 on_off = "Off"
 
+#условный текстовый массив
+threads = []
+
 # Установка уровня логирования
 logging.basicConfig(level=logging.INFO)
 
@@ -47,7 +50,7 @@ async def on_start(message: Message):
         await message.answer(text="Бим бим бам бам", reply_markup=keyboard)
 
     else:
-        await message.answer("Бот временно остановлен админимтратором")
+        await message.answer("Бот временно остановлен администратором")
 
 @dp.message_handler(commands=['count'])
 async def count(message: Message):
@@ -58,33 +61,43 @@ async def count(message: Message):
 
         await message.answer(text=len(links))
     else:
-        await message.answer("Бот временно остановлен админимтратором")
+        await message.answer("Бот временно остановлен администратором")
 
 @dp.message_handler(lambda message: message.text == 'Получить фото')
 async def get_photo(message: Message):
 
+    
     if on_off == "On" or admin(message.from_id):
-        
-        images = image_handler.start_combine()
+        if len(threads) > 10:
 
-        if images:
+            await message.answer("Большая нагрузка на бота, попробуйте позже!")
+        else:
 
-            input_media_images = []
+            threads.append("thread")
             
-            i = 0
+            images =  image_handler.start_combine()
 
-            while i < len(images) - 1:
-                image_stream = BytesIO()
-                images[i].save(image_stream, format='JPEG')
-                image_stream.seek(0)
-                input_media_images.append(InputMediaPhoto(media=image_stream)) 
-                i = i + 1   
+            if images:
 
-            print("Фото отправлены!")
-            await message.answer_media_group(media = input_media_images) 
+                input_media_images = []
+                
+                i = 0
+
+                while i < len(images) - 1:
+                    image_stream = BytesIO()
+                    images[i].save(image_stream, format='JPEG')
+                    image_stream.seek(0)
+                    input_media_images.append(InputMediaPhoto(media=image_stream)) 
+                    i = i + 1   
+                print("Фото сгенерированы!")
+
+
+            await message.answer_media_group(media = input_media_images)
+            threads.pop()
 
     else:
-        await message.answer("Бот временно остановлен админимтратором")
+        await message.answer("Бот временно остановлен администратором")
+    
 
 @dp.message_handler(commands=['help'])
 async def on_start(message: Message):
@@ -122,7 +135,7 @@ async def process_document(message: types.Message):
             await message.answer(text="Фоны успешно добавлены!")
     except:
         await message.answer("Произошла ошибка")
-
+"""
 @dp.message_handler(content_types=[types.ContentType.PHOTO])
 async def process_photos(message: types.Message):
 
@@ -147,6 +160,7 @@ async def process_photos(message: types.Message):
             await message.answer(text="Фото успешно изменены!")
     except:
         await message.answer("Произошла ошибка")
+"""
 @dp.message_handler()
 async def echo(message: Message):
     
@@ -193,5 +207,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-
     
