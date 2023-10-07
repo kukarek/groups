@@ -53,6 +53,7 @@ async def get_photo(message: Message):
             i = 0
             
             while i < len(images) - 1:
+                
                 image_stream = BytesIO()
                 images[i].save(image_stream, format='JPEG')
                 image_stream.seek(0)
