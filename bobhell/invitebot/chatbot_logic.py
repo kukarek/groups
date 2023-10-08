@@ -12,7 +12,6 @@ def start_status_handler(user_id, message_text):
                "Мы постараемся ее обработать как можно скорее\n\n"+
                "1. Модель телефона?")
 
-        
         return text, None
         
 
