@@ -1,4 +1,3 @@
-from vk_api.keyboard import VkKeyboard, VkKeyboardColor
 import sql
 
 #обработка первого сообщения, юзера нет в бд

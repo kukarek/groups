@@ -37,7 +37,7 @@ async def on_button1_click(query: CallbackQuery):
  
     await bot.delete_message(chat_id=admin, message_id=message_id)
     await bot.send_message(chat_id=user_id, text="Ваша заявка принята!\n\n"+
-                                                 "Чат - https://t.me//+7w7nKlAJFEA2NGM1")
+                                                 "Чат - https://t.me/+tkdRMOFp6MYwMTY1")
     
 
 @dp.callback_query_handler(lambda query: query.data.startswith("reject_"))

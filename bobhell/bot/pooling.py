@@ -11,8 +11,9 @@ import os
 import time
 import asyncio
 import subprocess
+import sys
 
-API_TOKEN = '6588918438:AAEuWOePbDIWlDufBsnHTku9wj9oHlU5IrQ'  # Замените YOUR_TELEGRAM_BOT_TOKEN на ваш токен
+API_TOKEN = '6588918438:AAEuWOePbDIWlDufBsnHTku9wj9oHlU5IrQ' 
 
 admins = [1020541698, 6108609160]
 
@@ -23,7 +24,6 @@ threads = []
 
 # Установка уровня логирования
 logging.basicConfig(level=logging.INFO)
-
 
 # Инициализация бота и диспетчера
 bot = Bot(token=API_TOKEN)
@@ -76,7 +76,7 @@ async def get_photo(message: Message):
 
             threads.append("thread")
             
-            images =  image_handler.start_combine()
+            images = image_handler.start_combine()
 
             if images:
 
@@ -91,7 +91,6 @@ async def get_photo(message: Message):
                     input_media_images.append(InputMediaPhoto(media=image_stream)) 
                     i = i + 1   
                 print("Фото сгенерированы!")
-
 
             await message.answer_media_group(media = input_media_images)
             threads.pop()
