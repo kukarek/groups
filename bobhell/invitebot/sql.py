@@ -3,7 +3,7 @@ import sqlite3
 #sql запросы
 def set_status(user_id, status):
    
-    conn = sqlite3.connect('inavtedusers.db')
+    conn = sqlite3.connect('invatedusers.db')
     cursor = conn.cursor()
     # Запрос для обновления статуса по user_id
     update_status_query = f'''
@@ -20,7 +20,7 @@ def set_status(user_id, status):
 
 def set_phone(user_id, phone):
    
-    conn = sqlite3.connect('inavtedusers.db')
+    conn = sqlite3.connect('invatedusers.db')
     cursor = conn.cursor()
     # Запрос для обновления статуса по user_id
     update_phone_query = f'''
@@ -37,10 +37,10 @@ def set_phone(user_id, phone):
 
 def set_time(user_id, time):
    
-    conn = sqlite3.connect('inavtedusers.db')
+    conn = sqlite3.connect('invatedusers.db')
     cursor = conn.cursor()
     # Запрос для обновления статуса по user_id
-    update_phone_query = f'''
+    update_time_query = f'''
     UPDATE users
     SET time = ?
     WHERE user_id = ?;
@@ -54,10 +54,10 @@ def set_time(user_id, time):
 
 def set_exp(user_id, exp):
    
-    conn = sqlite3.connect('inavtedusers.db')
+    conn = sqlite3.connect('invatedusers.db')
     cursor = conn.cursor()
     # Запрос для обновления статуса по user_id
-    update_phone_query = f'''
+    update_exp_query = f'''
     UPDATE users
     SET exp = ?
     WHERE user_id = ?;
@@ -71,10 +71,10 @@ def set_exp(user_id, exp):
 
 def set_lolz(user_id, lolz):
    
-    conn = sqlite3.connect('inavtedusers.db')
+    conn = sqlite3.connect('invatedusers.db')
     cursor = conn.cursor()
     # Запрос для обновления статуса по user_id
-    update_phone_query = f'''
+    update_lolz_query = f'''
     UPDATE users
     SET lolz = ?
     WHERE user_id = ?;
@@ -89,7 +89,7 @@ def set_lolz(user_id, lolz):
 def add_user(user_id):
     
     #подключение в базе данных 
-    conn = sqlite3.connect('inavtedusers.db')
+    conn = sqlite3.connect('invatedusers.db')
     cursor = conn.cursor()
     #запрос на добавление нового юзера со статусом по умолчанию - start 
     add_user_query = f'''
@@ -97,14 +97,14 @@ def add_user(user_id):
     VALUES (?, ?);
     '''
     #Выполнение запроса с передачей параметров user_id и status
-    cursor.execute(add_user_query, (user_id, "start"))
+    cursor.execute(add_user_query, (user_id, "phone"))
     # Сохранение изменений и закрытие подключения к базе данных
     conn.commit()
     conn.close()
 
 def get_status(user_id):
 
-    conn = sqlite3.connect('inavtedusers.db')
+    conn = sqlite3.connect('invatedusers.db')
     cursor = conn.cursor()
 
     # Запрос для проверки наличия записи с заданным user_id
@@ -123,7 +123,7 @@ def get_status(user_id):
     conn.close()
     
     if result == 1:
-       conn = sqlite3.connect('inavtedusers.db')
+       conn = sqlite3.connect('invatedusers.db')
        cursor = conn.cursor()
        # Запрос для получения статуса по user_id
        get_status_query = f'''
@@ -143,9 +143,9 @@ def get_status(user_id):
     else:
        return "0"
 
-def get_user_info():
+def get_user_info(user_id):
 
-    conn = sqlite3.connect('inavtedusers.db')
+    conn = sqlite3.connect('invatedusers.db')
     cursor = conn.cursor()
 
     # Запрос для проверки наличия записи с заданным user_id
@@ -164,29 +164,29 @@ def get_user_info():
     conn.close()
     
     if result == 1:
-       conn = sqlite3.connect('inavtedusers.db')
+       conn = sqlite3.connect('invatedusers.db')
        cursor = conn.cursor()
        # Запрос для получения статуса по user_id
        get_status_query = f'''
-       SELECT status
+       SELECT *
        FROM users
        WHERE user_id = ?;
        '''
        # Выполнение запроса с передачей параметра user_id
        cursor.execute(get_status_query, (user_id,))
-       status = cursor.fetchone()
+       info = cursor.fetchone()
 
        conn.commit()
        conn.close()
 
-       return status
+       return info
     
     else:
        return "0"
 
 #созданию соединения (не используется в коде)
 def create_connection():
-    connection = sqlite3.connect('inavtedusers.db')
+    connection = sqlite3.connect('invatedusers.db')
     cursor = connection.cursor()
 
     # Создаем таблицу для хранения подписок пользователей, если она не существует
