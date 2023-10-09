@@ -13,7 +13,7 @@ import helper_bot
 
 # Укажите токен VK бота и Telegram бота
 VK_TOKEN = "vk1.a.wYlKxh7CuxPS0UHp3F8SRLatcPewyEHqerQJrtrBOc077tEdHTIkBq5EbUeGPvMef02_kB6I2IaSMEf9CjTgH_hpdjSfdn6pAq1aX0J1WBbUKONpxrMgPLW0UzMfrKwz0a2mxoUJ5AgXcZXF-crp67TFpib-WIJRk6asj2lmevOjBgin05SOJdX7x346Q8nOkImWqkRCJFGJv5d1sabGzw"
-TELEGRAM_TOKEN = "6589082148:AAGlKY-mhuDxHtPMmJayoVXRpPnSMBRswhU"
+TELEGRAM_TOKEN = "6443637529:AAFv5weWky604Y09bDHnVlvY-12_oqrBlN0"
 CHANNEL_ID = "-1001962325633"  # Замените на свой канал
 
 

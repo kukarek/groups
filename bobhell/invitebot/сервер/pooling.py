@@ -6,10 +6,10 @@ import asyncio
 import chatbot_logic
 from aiogram.types import CallbackQuery, InlineKeyboardButton, InlineKeyboardMarkup
 import sql
-import requests
 from bs4 import BeautifulSoup
+import requests
 
-API_TOKEN = '6588918438:AAEuWOePbDIWlDufBsnHTku9wj9oHlU5IrQ'  # тестбот
+API_TOKEN = '6234772391:AAH1Vow3gIGerfwmzfxjoSaKpGXYakBvZdg'  # Замените YOUR_TELEGRAM_BOT_TOKEN на ваш токен
 
 admin = 6108609160
 owner = 1020541698
@@ -129,3 +129,4 @@ def main():
 if __name__ == '__main__':
     main()
     
+
