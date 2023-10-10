@@ -13,7 +13,7 @@ import asyncio
 import subprocess
 import sys
 
-API_TOKEN = '6588918438:AAEuWOePbDIWlDufBsnHTku9wj9oHlU5IrQ' 
+API_TOKEN = '6588918438:AAEuWOePbDIWlDufBsnHTku9wj9oHlU5IrQ' #тестбот
 
 admins = [1020541698, 6108609160]
 

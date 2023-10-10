@@ -4,10 +4,10 @@ import random
 from io import BytesIO
 import requests
 
-overlay_folder = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\overlay"
-backgrounds_list = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\backgrounds.txt"
+overlay_folder = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\image handler\\overlay"
+backgrounds_list = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\image handler\\backgrounds.txt"
 
-footage_folder = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell"
+footage_folder = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\image handler"
 
 
 def clear_overlays():

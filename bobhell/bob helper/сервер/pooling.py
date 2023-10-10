@@ -9,19 +9,23 @@ import sql
 from bs4 import BeautifulSoup
 import requests
 
-API_TOKEN = '6234772391:AAH1Vow3gIGerfwmzfxjoSaKpGXYakBvZdg'  # Замените YOUR_TELEGRAM_BOT_TOKEN на ваш токен
+API_TOKEN = '6234772391:AAH1Vow3gIGerfwmzfxjoSaKpGXYakBvZdg'  # рабочий токен бота хэлпера
 
-admin = 6108609160
-owner = 1020541698
+Bob = 6108609160
+admins = [6108609160, 1020541698]
 channel = -1001821448494
 # Установка уровня логирования
 logging.basicConfig(level=logging.INFO)
-
 
 # Инициализация бота и диспетчера
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 
+def admin(id):
+    for admin in admins:
+        if admin == id:
+            return True
+    return False
 
 def get_usd_exchange_rate():
     url = 'https://www.cbr.ru/currency_base/daily/'
@@ -71,9 +75,10 @@ async def on_button1_click(query: CallbackQuery):
     user_id = int(query.data.split("_")[1]) #от кого заявка
     message_id = int(query.data.split("_")[2]) #id сообщения у админа
  
-    await bot.delete_message(chat_id=channel, message_id=message_id)
+    await bot.delete_message(chat_id=Bob, message_id=message_id)
     await bot.send_message(chat_id=user_id, text="Ваша заявка принята!\n\n"+
-                                                 "Чат - https://t.me/+tkdRMOFp6MYwMTY1")
+                                                 "Чат - https://t.me/+tkdRMOFp6MYwMTY1\n\n"+
+                                                 "Канал Новости - https://t.me/+T1WGxYqAj1kzMjM9")
     
 
 @dp.callback_query_handler(lambda query: query.data.startswith("reject_"))
@@ -82,44 +87,38 @@ async def on_button2_click(query: CallbackQuery):
     user_id = int(query.data.split("_")[1]) #от кого заявка
     message_id = int(query.data.split("_")[2]) #id сообщения у админа
  
-    await bot.delete_message(chat_id=channel, message_id=message_id)
+    await bot.delete_message(chat_id=Bob, message_id=message_id)
     await bot.send_message(chat_id=user_id, text="Ваша заявка отклонена!")
 
 @dp.message_handler(commands=['test'])
 async def on_start(message: Message):
 
-    if message.from_id == owner or message.from_id == channel:
+    if admin(message.from_id):
         await message.answer("Все работает")
  
-@dp.channel_post_handler()
+@dp.message_handler()
 async def echo(message: Message):
-    if message.text == "test":
-        await message.answer("Все работает")
-    else:
+    
+    if admin(message.from_id):
         try:
             rub = float(message.text)
             course = float(get_usd_exchange_rate().replace(",", "."))
             usd = rub / course
             await message.answer(f"{round(usd, 2)} USD")
         except Exception as e:
-            await message.answer(f"Ошибочка где-то...\n\n {e}")
+            print()
+    else:
 
-@dp.message_handler()
-async def echo(message: Message):
-    
-    if message.from_id == channel:
-        return
+        response, notify = chatbot_logic.reply_message_handler(user_id=message.from_id, message_text=message.text)
 
-    response, notify = chatbot_logic.reply_message_handler(user_id=message.from_id, message_text=message.text)
+        if response != None:
+            await message.answer(text=response)
+        
+        if notify != None:
 
-    if response != None:
-        await message.answer(text=response)
-    
-    if notify != None:
-
-        mess = await bot.send_message(chat_id=channel, text=notify)
-        keyboard = generate_inline_keyboard(user_id=message.from_id, message_id=mess.message_id)
-        await bot.edit_message_reply_markup(chat_id=channel, message_id=mess.message_id, reply_markup=keyboard)
+            mess = await bot.send_message(chat_id=Bob, text=notify)
+            keyboard = generate_inline_keyboard(user_id=message.from_id, message_id=mess.message_id)
+            await bot.edit_message_reply_markup(chat_id=Bob, message_id=mess.message_id, reply_markup=keyboard)
 
 def main():
     # Запуск бота
@@ -129,4 +128,3 @@ def main():
 if __name__ == '__main__':
     main()
     
-

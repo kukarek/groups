@@ -9,7 +9,7 @@ from PIL import Image
 import time
 
 
-API_TOKEN = '6516087703:AAFogf1wdiNFFkolsNWMjOvSXj0BN3ypi5g'  # Замените YOUR_TELEGRAM_BOT_TOKEN на ваш токен
+API_TOKEN = '6516087703:AAFogf1wdiNFFkolsNWMjOvSXj0BN3ypi5g'  # рабочий токен бота для выдачи фото
 
 admins = [1020541698, 6108609160]
 
