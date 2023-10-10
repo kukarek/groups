@@ -50,15 +50,6 @@ async def send_telegram(image, caption):
 
     await bot.close()
 
-async def notify_in_tg(text):
-
-    bot = Bot(token=TELEGRAM_TOKEN)
-
-    await bot.send_message(chat_id="-1001796549989", text=text)
-
-    await bot.close()
-
-
 def send_to_telegram(event):
    
     message = event.object.text
@@ -96,8 +87,7 @@ def main():
 
                     if notify == True: #уведомление админа
                         vk.messages.send(user_id=732405775, message=f"Новое сообщение! '{event.message.text}'", random_id=0)
-                        asyncio.run(notify_in_tg(f"Новое сообщение! '{event.message.text}'"))
-                    
+                        
                     if reply != None: #отправка ответа юзеру с клавиатурой, либо без нее
                         if keybord != None:
                             vk.messages.send(user_id=event.message.from_id, message=reply, random_id=0, keyboard=keybord)
