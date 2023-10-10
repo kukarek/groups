@@ -18,7 +18,7 @@ API_TOKEN = '6588918438:AAEuWOePbDIWlDufBsnHTku9wj9oHlU5IrQ' #тестбот
 admins = [1020541698, 6108609160]
 
 on_off = "Off"
-
+footage = "Off"
 #условный текстовый массив
 threads = []
 
@@ -113,6 +113,7 @@ async def on_start(message: Message):
 # Обработчик приема документа
 @dp.message_handler(content_types=[types.ContentType.DOCUMENT])
 async def process_document(message: types.Message):
+    global on_off
     try:
         #добавление списка фонов
         if admin(message.from_id):
@@ -163,7 +164,7 @@ async def process_photos(message: types.Message):
 """
 @dp.message_handler()
 async def echo(message: Message):
-    
+    global footage
     global on_off
     try:
         if admin(message.from_id):

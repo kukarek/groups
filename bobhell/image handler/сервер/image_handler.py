@@ -3,6 +3,7 @@ import os
 import random
 from io import BytesIO
 import requests
+import pooling
 
 overlay_folder = "overlay"
 backgrounds_list = "backgrounds.txt"
@@ -119,7 +120,8 @@ def combine(overlay_image, background_image, result_name):
     result = background_image.copy()
     result.paste(overlay_image, (x, y))
 
-    footage = Image.open(f"{footage_folder}footage{random.randint(1,7)}.png")
+    """
+    footage = Image.open(f"{footage_folder}footage{random.randint(1,6)}.png")
 
     # Получаем размеры футажа и фона
     overlay_width, overlay_height = footage.size
@@ -134,9 +136,9 @@ def combine(overlay_image, background_image, result_name):
 
     # Вставляем фрагмент футажа на фон
     result.paste(overlay_fragment, (0,0), overlay_fragment)
-    
-    footage.close()
 
+    footage.close()
+    """
     return result
 
 def main():

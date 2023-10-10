@@ -14,7 +14,6 @@ API_TOKEN = '6516087703:AAFogf1wdiNFFkolsNWMjOvSXj0BN3ypi5g'  # рабочий �
 admins = [1020541698, 6108609160]
 
 on_off = "Off"
-
 #условный текстовый массив
 threads = []
 
@@ -161,6 +160,7 @@ async def process_photos(message: types.Message):
 @dp.message_handler()
 async def echo(message: Message):
     
+    global footage
     global on_off
     try:
         if admin(message.from_id):

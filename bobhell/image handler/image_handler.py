@@ -119,7 +119,7 @@ def combine(overlay_image, background_image, result_name):
     # Создаем новое изображение, накладывая фон и наложение
     result = background_image.copy()
     result.paste(overlay_image, (x, y))
-
+    """
     footage = Image.open(f"{footage_folder}//footage{random.randint(1,7)}.png")
 
     # Получаем размеры футажа и фона
@@ -135,9 +135,9 @@ def combine(overlay_image, background_image, result_name):
 
     # Вставляем фрагмент футажа на фон
     result.paste(overlay_fragment, (0,0), overlay_fragment)
-    
+        
     footage.close()
-
+    """
     return result
 
 def main():
