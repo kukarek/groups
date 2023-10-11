@@ -5,7 +5,8 @@ from io import BytesIO
 import requests
 import pooling
 
-overlay_folder = "overlay"
+overlay_folder_FR = "overlay_FR"
+overlay_folder_SP = "overlay_SP"
 backgrounds_list = "backgrounds.txt"
 
 footage_folder = ""
@@ -18,8 +19,12 @@ def clear_overlays():
             file_path = os.path.join(overlay_folder, file)
             os.remove(file_path)
 
-def start_combine():
+def start_combine(country):
 
+    if country == "FRANCE":
+        overlay_folder = overlay_folder_FR
+    if country == "SPAIN":
+        overlay_folder = overlay_folder_SP
     #получение спика фоток для наложения
     overlay_dict = {}
 
@@ -119,9 +124,8 @@ def combine(overlay_image, background_image, result_name):
     # Создаем новое изображение, накладывая фон и наложение
     result = background_image.copy()
     result.paste(overlay_image, (x, y))
-
     """
-    footage = Image.open(f"{footage_folder}footage{random.randint(1,6)}.png")
+    footage = Image.open(f"{footage_folder}//footage{random.randint(1,7)}.png")
 
     # Получаем размеры футажа и фона
     overlay_width, overlay_height = footage.size
@@ -136,7 +140,7 @@ def combine(overlay_image, background_image, result_name):
 
     # Вставляем фрагмент футажа на фон
     result.paste(overlay_fragment, (0,0), overlay_fragment)
-
+        
     footage.close()
     """
     return result

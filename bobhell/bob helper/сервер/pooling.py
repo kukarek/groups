@@ -11,8 +11,8 @@ import requests
 
 API_TOKEN = '6234772391:AAH1Vow3gIGerfwmzfxjoSaKpGXYakBvZdg'  # рабочий токен бота хэлпера
 
-Bob = 6108609160
-admins = [6108609160, 1020541698]
+Bob = 6356732052
+admins = [6356732052, 1020541698]
 channel = -1001821448494
 # Установка уровня логирования
 logging.basicConfig(level=logging.INFO)
@@ -77,8 +77,8 @@ async def on_button1_click(query: CallbackQuery):
  
     await bot.delete_message(chat_id=Bob, message_id=message_id)
     await bot.send_message(chat_id=user_id, text="Ваша заявка принята!\n\n"+
-                                                 "Чат - https://t.me/+tkdRMOFp6MYwMTY1\n\n"+
-                                                 "Канал Новости - https://t.me/+T1WGxYqAj1kzMjM9")
+                                                 "Чат - https://t.me/+E_Xsqxn55pY0OTMy\n\n"+
+                                                 "Канал Новости - https://t.me/+CpMVBlTqtZNjNDIy")
     
 
 @dp.callback_query_handler(lambda query: query.data.startswith("reject_"))
@@ -95,6 +95,21 @@ async def on_start(message: Message):
 
     if admin(message.from_id):
         await message.answer("Все работает")
+
+@dp.message_handler(commands=['send_all'])
+async def on_start(message: Message):
+
+    conn = engine.connect()
+
+    # Выполняем SQL-запрос для извлечения всех user_id
+    query = text("SELECT user_id FROM your_table")
+    result = conn.execute(query)
+
+    # Извлекаем все значения user_id в список
+    user_ids = [row[0] for row in result]
+
+    # Закрываем соединение
+    conn.close()
  
 @dp.message_handler()
 async def echo(message: Message):

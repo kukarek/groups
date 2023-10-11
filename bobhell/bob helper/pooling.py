@@ -11,7 +11,7 @@ from bs4 import BeautifulSoup
 
 API_TOKEN = '6588918438:AAEuWOePbDIWlDufBsnHTku9wj9oHlU5IrQ'  # тестбот
 
-Bob = 6108609160
+Bob = 6356732052
 admins = [6108609160]
 channel = -1001821448494
 # Установка уровня логирования
@@ -77,8 +77,8 @@ async def on_button1_click(query: CallbackQuery):
  
     await bot.delete_message(chat_id=Bob, message_id=message_id)
     await bot.send_message(chat_id=user_id, text="Ваша заявка принята!\n\n"+
-                                                 "Чат - https://t.me/+tkdRMOFp6MYwMTY1\n\n"+
-                                                 "Канал Новости - https://t.me/+T1WGxYqAj1kzMjM9")
+                                                 "Чат - https://t.me/+E_Xsqxn55pY0OTMy\n\n"+
+                                                 "Канал Новости - https://t.me/+CpMVBlTqtZNjNDIy")
     
 
 @dp.callback_query_handler(lambda query: query.data.startswith("reject_"))

@@ -4,10 +4,12 @@ import random
 from io import BytesIO
 import requests
 
-overlay_folder = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\image handler\\overlay"
-backgrounds_list = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\image handler\\backgrounds.txt"
+overlay_folder_FR = "C:\\Users\\mik16\\Documents\\GitHub\\projects\\bobhell\\image handler\\overlay_FR"
+overlay_folder_SP = "C:\\Users\\mik16\\Documents\\GitHub\\projects\\bobhell\\image handler\\overlay_SP"
 
-footage_folder = "C:\\Users\\Dmitry\\Documents\\projects\\bobhell\\image handler"
+backgrounds_list = "C:\\Users\\mik16\\Documents\\GitHub\\projects\\bobhell\\image handler\\backgrounds.txt"
+
+footage_folder = "C:\\Users\\mik16\\Documents\\GitHub\\projects\\bobhell\\image handler"
 
 
 def clear_overlays():
@@ -18,8 +20,12 @@ def clear_overlays():
             file_path = os.path.join(overlay_folder, file)
             os.remove(file_path)
 
-def start_combine():
+def start_combine(country):
 
+    if country == "FRANCE":
+        overlay_folder = overlay_folder_FR
+    if country == "SPAIN":
+        overlay_folder = overlay_folder_SP
     #получение спика фоток для наложения
     overlay_dict = {}
 

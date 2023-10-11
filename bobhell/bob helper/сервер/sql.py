@@ -143,6 +143,43 @@ def get_status(user_id):
     else:
        return "0"
 
+def get_users(user_id):
+
+    conn = sqlite3.connect('invatedusers.db')
+    cursor = conn.cursor()
+
+    # Выполняем SQL-запрос для извлечения всех user_id
+    query = text("SELECT user_id FROM your_table")
+
+    # Извлекаем все значения user_id в список
+    user_ids = [row[0] for row in result]
+    # Выполнение запроса с передачей параметра user_id
+    cursor.execute(check_user_query, (user_id,))
+    result = cursor.fetchone()[0]
+    conn.commit()
+    conn.close()
+    
+    if result == 1:
+       conn = sqlite3.connect('invatedusers.db')
+       cursor = conn.cursor()
+       # Запрос для получения статуса по user_id
+       get_status_query = f'''
+       SELECT status
+       FROM users
+       WHERE user_id = ?;
+       '''
+       # Выполнение запроса с передачей параметра user_id
+       cursor.execute(get_status_query, (user_id,))
+       status = cursor.fetchone()
+
+       conn.commit()
+       conn.close()
+
+       return status
+    
+    else:
+       return "0"
+
 def get_user_info(user_id):
 
     conn = sqlite3.connect('invatedusers.db')

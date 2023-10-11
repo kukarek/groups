@@ -11,7 +11,7 @@ import time
 
 API_TOKEN = '6516087703:AAFogf1wdiNFFkolsNWMjOvSXj0BN3ypi5g'  # рабочий токен бота для выдачи фото
 
-admins = [1020541698, 6108609160]
+admins = [1020541698, 6356732052]
 
 on_off = "Off"
 #условный текстовый массив
@@ -40,8 +40,11 @@ async def on_start(message: Message):
 
         keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True, selective=True)
         # Добавляем кнопки
-        button1 = types.KeyboardButton("Получить фото")
+        button1 = types.KeyboardButton("Получить фото (Франция)")
+        button2 = types.KeyboardButton("Получить фото (Испания)")
+
         keyboard.add(button1)
+        keyboard.add(button2)
         # Отправляем сообщение с клавиатурой
         await message.answer(text="Бим бим бам бам", reply_markup=keyboard)
 
@@ -59,7 +62,7 @@ async def count(message: Message):
     else:
         await message.answer("Бот временно остановлен администратором")
 
-@dp.message_handler(lambda message: message.text == 'Получить фото')
+@dp.message_handler(lambda message: message.text == 'Получить фото (Франция)')
 async def get_photo(message: Message):
 
     
@@ -71,7 +74,7 @@ async def get_photo(message: Message):
 
             threads.append("thread")
             
-            images =  image_handler.start_combine()
+            images = image_handler.start_combine(country="FRANCE")
 
             if images:
 
@@ -87,13 +90,45 @@ async def get_photo(message: Message):
                     i = i + 1   
                 print("Фото сгенерированы!")
 
-
             await message.answer_media_group(media = input_media_images)
             threads.pop()
 
     else:
         await message.answer("Бот временно остановлен администратором")
     
+@dp.message_handler(lambda message: message.text == 'Получить фото (Испания)')
+async def get_photo(message: Message):
+
+    
+    if on_off == "On" or admin(message.from_id):
+        if len(threads) > 10:
+
+            await message.answer("Большая нагрузка на бота, попробуйте позже!")
+        else:
+
+            threads.append("thread")
+            
+            images = image_handler.start_combine(country="SPAIN")
+
+            if images:
+
+                input_media_images = []
+                
+                i = 0
+
+                while i < len(images) - 1:
+                    image_stream = BytesIO()
+                    images[i].save(image_stream, format='JPEG')
+                    image_stream.seek(0)
+                    input_media_images.append(InputMediaPhoto(media=image_stream)) 
+                    i = i + 1   
+                print("Фото сгенерированы!")
+
+            await message.answer_media_group(media = input_media_images)
+            threads.pop()
+
+    else:
+        await message.answer("Бот временно остановлен администратором")
 
 @dp.message_handler(commands=['help'])
 async def on_start(message: Message):
@@ -109,6 +144,7 @@ async def on_start(message: Message):
 # Обработчик приема документа
 @dp.message_handler(content_types=[types.ContentType.DOCUMENT])
 async def process_document(message: types.Message):
+    global on_off
     try:
         #добавление списка фонов
         if admin(message.from_id):
@@ -159,7 +195,6 @@ async def process_photos(message: types.Message):
 """
 @dp.message_handler()
 async def echo(message: Message):
-    
     global footage
     global on_off
     try:
