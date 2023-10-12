@@ -4,15 +4,7 @@ from aiogram.types import Message
 import vk_top
 import threading
 import wrapping
-
-
-group_id_chlb = "220670949"
-url_chlb = "https://vk.com/search?c%5Bper_page%5D=40&c%5Bq%5D=%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D1%87%D0%B5%D0%BB%D1%8F%D0%B1%D0%B8%D0%BD%D1%81%D0%BA&c%5Bsection%5D=communities"
-
-group_id_kzn = "22156807"
-url_kzn = "https://vk.com/search?c%5Bper_page%5D=40&c%5Bq%5D=%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%B0%20%D0%BA%D0%B0%D0%B7%D0%B0%D0%BD%D1%8C&c%5Bsection%5D=communities"
-
-API_TOKEN = '6576254488:AAHYcpkpwlONZUlDR6JuB1_MYI-RTSWunEo'  # Замените YOUR_TELEGRAM_BOT_TOKEN на ваш токен
+from config import GROUPCHLB_ID, GROUPCHLB_LINK, GROUPKZN_ID, GROUPKZN_LINK, API_TOKEN
 
 # Установка уровня логирования
 logging.basicConfig(level=logging.INFO)
@@ -33,8 +25,8 @@ async def on_start(message: Message):
 @dp.message_handler(commands=['get_top'])
 async def get_top(message: Message):
    
-    topchlb = vk_top.Get_top(url = url_chlb, group_id = group_id_chlb)
-    topkzn = vk_top.Get_top(url = url_kzn, group_id = group_id_kzn)
+    topchlb = vk_top.Get_top(url = GROUPCHLB_LINK, group_id = GROUPCHLB_ID)
+    topkzn = vk_top.Get_top(url = GROUPKZN_LINK, group_id = GROUPKZN_ID)
 
     await message.answer(f"Место в топе по Челябинску: {topchlb}\n"
                          f"Место в топе по Казани: {topkzn}")

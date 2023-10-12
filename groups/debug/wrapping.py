@@ -7,13 +7,7 @@ import requests
 import time
 import random
 import threading
-                                                                        
-API_KEY = "bb8cad79840056d1fff7676360a48b97"
-API_URL = "https://prosmmtop.ru/api/v2"
-kzn_url = "https://vk.com/rabotakazank"
-chlb_url = "https://vk.com/rabotachelyabynsk"
-tg_kzn_url = "https://t.me/s/rabotakazank"
-tg_chlb_url = "https://t.me/s/rabotachelyabinski"
+from config import API_URL, API_KEY, kzn_url, tg_kzn_url
 
 def get_balance():
 
@@ -61,12 +55,6 @@ def get_tg_posts_id(url):  #принимает url страницу группы
             post_id = post.split('"')[0]
             posts_id.append(post_id)
 
-    if url == tg_chlb_url:
-        arc = html.split('data-post="rabotachelyabinski/')
-        for post in arc:
-            post_id = post.split('"')[0]
-            posts_id.append(post_id)
-
     posts_id.reverse()
 
     return posts_id  #возвращает список id последних девяти постов
@@ -100,26 +88,17 @@ def start_wrapping(cycle = 0, VK = True, TG = True, timer = 0):
     else:
         return False  #поток не запущен
     
-'''  
-def start_timer():
- 
-    if not active_timer_threads:
-        t1 = threading.Thread(target=Timer)
-        t1.start()
-        active_timer_threads.append(t1)
-        return True  #поток запущен
-    else:
-        return False  #поток не запущен
-# Запускаем метод каждый день в 8 утра
-schedule.every().day.at("12:02").do(start_wrapping)
-  
-def Timer():
-    while True:
-        if States.stop: 
-            break
-        schedule.run_pending()
-        time.sleep(1)
-'''
+def sleep(seconds): #пауза с проверкой 
+    a = 0
+    while a < seconds:
+        time.sleep(1) 
+        if States.stop:
+            active_threads.clear()
+            return None
+        a += 1
+    return "Ok"
+    
+
 def wrapping(cycle, VK, TG, timer): 
   
     States.VK = VK
@@ -127,7 +106,8 @@ def wrapping(cycle, VK, TG, timer):
     States.stop = False
     i = cycle
     
-    time.sleep(timer*60) #отложенный запуск накрутки
+    if sleep(timer*60) != "Ok":
+        return
 
     try:
         while i < 28:    #цикл на 14 часов, каждые 30 минут 
@@ -189,7 +169,9 @@ def wrapping(cycle, VK, TG, timer):
                     States.stop = True
                     active_threads.clear() #перед завершением функции чистим список активных потоков
 
-                time.sleep(1800)     # 30 минут пауза
+                if sleep(1800) != "Ok":
+                    return   # 30 минут пауза с проверкой
+
                 i += 1 
             else:
                 active_threads.clear() #перед завершением функции чистим список активных потоков

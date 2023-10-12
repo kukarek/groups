@@ -8,7 +8,7 @@ from aiogram import Bot
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
 import subscriber
-from config import VK_TOKEN, TELEGRAM_TOKEN, CHANNEL_ID, GROUP_ID, ADMIN
+from config import VK_TOKEN, TELEGRAM_TOKEN, CHANNEL_ID, GROUPKZN_ID, ADMIN
 
 # Инициализация Telegram бота
 async def send_telegram(image, caption):
@@ -55,7 +55,7 @@ def main():
     while True:
         
         vk_session = vk_api.VkApi(token=VK_TOKEN)
-        longpoll = VkBotLongPoll(vk_session, GROUP_ID)  
+        longpoll = VkBotLongPoll(vk_session, GROUPKZN_ID)  
         vk = vk_session.get_api()
 
         print("соединение установлено- казань")
@@ -78,7 +78,7 @@ def main():
                             vk.messages.send(user_id=event.message.from_id, message=reply, random_id=0)   
                 
 
-                if event.type == VkBotEventType.WALL_POST_NEW and event.obj['from_id'] == -int(GROUP_ID):
+                if event.type == VkBotEventType.WALL_POST_NEW and event.obj['from_id'] == -int(GROUPKZN_ID):
                     #id группы = event.object.owner_id
                     send_to_telegram(event=event) #пересылка поста в телеграм канал
                     users = subscriber.post_handler(event.object) #тянем из бд список подписчиков, чьи слова совпадают 
