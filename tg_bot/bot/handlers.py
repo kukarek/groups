@@ -57,7 +57,7 @@ async def echo(message: Message):
     
     try:
      if text.find("stop_wrapping") != -1:
-        wrapping.States.stop = True
+        wrapping.wrapping_state.isActive = False
         await message.answer("Остановка накрутки")
 
      elif text.find("start_wrapping") != -1:
@@ -105,8 +105,8 @@ async def echo(message: Message):
                TG = False
             await message.answer(f"Установка параметров: TG={TG}")
 
-        wrapping.States.VK = VK
-        wrapping.States.TG = TG
+        wrapping.wrapping_state.VK = VK
+        wrapping.wrapping_state.TG = TG
 
      else:
         await message.answer(f"Вы написали: {message.text}")
