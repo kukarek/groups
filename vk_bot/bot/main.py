@@ -5,12 +5,17 @@ import time
 from misc.config import GROUPKZN_ID, API_TOKEN
 from .events_handler import *
 from database import sql
+import logging
 
-vk_session = vk_api.VkApi(token=API_TOKEN["vk"])
+logg = logging.getLogger(__name__)
+vk_session = vk_api.VkApi(token=API_TOKEN['vk'])
 longpoll = VkBotLongPoll(vk_session, GROUPKZN_ID)
 vk = vk_session.get_api()
 
+from log.loggHandler import ERROR
+
 def init():
+    logg.addHandler(ERROR())
     sql.create_connection()
 
 
@@ -18,7 +23,7 @@ def start_bot():
 
     init() 
 
-    print("Соединение установлено")
+    logg.info("SUCCESS CONNECTION (vk_bot)")
 
     try:
         for event in longpoll.listen():
@@ -31,8 +36,8 @@ def start_bot():
                 
     except Exception as e:
         # В случае ошибки, печатаем ее и продолжаем прослушивание
-        print("Разрыв соединения")
-        print(f"Error: {e}")
+        logg.error("INVALID CONNECTION (vk_bot)")
+        logg.info(e)
         time.sleep(5)  # Пауза перед попыткой подключения снова
 
 

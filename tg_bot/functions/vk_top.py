@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import os
 
 #просто показывает место в топе обеих групп в вк
 
@@ -37,9 +38,9 @@ def extract_group_strings(html):
 
 
 def Get_top(url, group_id):
-      top = 0
-      file_path = 'html_page.html'  # Имя файла, куда будет сохранена HTML страница
-      try:
+    top = 0
+    file_path = 'tg_bot/functions/html_page.html'  # Имя файла, куда будет сохранена HTML страница
+    try:
         download_html(url, file_path)
         html = read_html(file_path)
         cleaned_html = remove_before_first_group(html)
@@ -50,15 +51,18 @@ def Get_top(url, group_id):
             if group_strings[i].find(group_id) != -1:
                 top = i+1
 
-      except requests.exceptions.HTTPError as http_err:
-          print(f"HTTP error occurred: {http_err}")
-      except Exception as err:
-          print(f"An error occurred: {err}")
+    except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
+    except Exception as err:
+        print(f"An error occurred: {err}")
 
-      if(top == 0):
-          return 40
-      else:
-          return top
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        
+    if(top == 0):
+        return 40
+    else:
+        return top
 
 def main():
     print(Get_top())

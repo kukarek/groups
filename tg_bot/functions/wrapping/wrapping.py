@@ -13,7 +13,7 @@ logg.addHandler(ERROR())
 wrapping_state = States()
 
 def get_balance():
-
+    
     params = dict(key=API_KEY, action="balance")
     
     res = requests.get(API_URL, params=params)
@@ -21,8 +21,8 @@ def get_balance():
     if res.status_code != 200:
         logg.error(f"Не удалось получить баланс: status code - {res.status_code}")
         return "ошибка :("
-    
-    return res.json()['balance']
+    balance = float(res.json()['balance'])
+    return round(balance, 2)
 
 def get_vk_posts_id(url):  #принимает url страницу группы 
     

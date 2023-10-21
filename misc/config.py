@@ -19,6 +19,7 @@ ADMINS = [732405775]
 
 TG_ADMIN = 1020541698
 
+db = 'database/subscriptions.db'
 #правила размещения
 RULES_LINK = "https://vk.com//@rabotakazank-vakans"
 #реквизиты

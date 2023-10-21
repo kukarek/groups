@@ -4,7 +4,7 @@ import tg_bot
 from misc.config import API_TOKEN
 
 logg = logging.getLogger(__name__)
-bot = Bot(token="6588918438:AAEuWOePbDIWlDufBsnHTku9wj9oHlU5IrQ")
+bot = Bot(token=API_TOKEN["helper"])
 
 async def on_start(dp: Dispatcher):
       

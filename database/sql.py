@@ -1,5 +1,5 @@
 import sqlite3
-
+from misc.config import db
 #sql запросы
 def set_status(user_id, status, group_id):
    
@@ -8,7 +8,7 @@ def set_status(user_id, status, group_id):
     if group_id == 220670949:
         table = "chlb_users"
     
-    conn = sqlite3.connect('subscriptions.db')
+    conn = sqlite3.connect(db)
     cursor = conn.cursor()
     # Запрос для обновления статуса по user_id
     update_status_query = f'''
@@ -32,7 +32,7 @@ def set_keywords(user_id, keywords, group_id):
 
     keywords = keywords.lower()
 
-    conn = sqlite3.connect('subscriptions.db')
+    conn = sqlite3.connect(db)
     cursor = conn.cursor()
     # Запрос для обновления ключевых слов
     update_status_query = f'''
@@ -53,7 +53,7 @@ def add_user(user_id, group_id):
         table = "chlb_users"
 
     #подключение в базе данных 
-    conn = sqlite3.connect('subscriptions.db')
+    conn = sqlite3.connect(db)
     cursor = conn.cursor()
     #запрос на добавление нового юзера со статусом по умолчанию - start 
     add_user_query = f'''
@@ -74,7 +74,7 @@ def remove_keywords(user_id, group_id):
         table = "chlb_users"
 
     # Подключение к базе данных
-    conn = sqlite3.connect('subscriptions.db')
+    conn = sqlite3.connect(db)
     cursor = conn.cursor()
     # Запрос для очистки поля key_word по user_id
     clear_keyword_query = f'''
@@ -95,7 +95,7 @@ def get_keywords(user_id, group_id):
     if group_id == 220670949:
         table = "chlb_users"
 
-    conn = sqlite3.connect('subscriptions.db')
+    conn = sqlite3.connect(db)
     cursor = conn.cursor()
     # Запрос для получения ключевых слов по user_id
     get_keywords_query = f'''
@@ -117,7 +117,7 @@ def get_status(user_id, group_id):
     if group_id == 220670949:
         table = "chlb_users"
 
-    conn = sqlite3.connect('subscriptions.db')
+    conn = sqlite3.connect(db)
     cursor = conn.cursor()
 
     # Запрос для проверки наличия записи с заданным user_id
@@ -136,7 +136,7 @@ def get_status(user_id, group_id):
     conn.close()
     
     if result == 1:
-       conn = sqlite3.connect('subscriptions.db')
+       conn = sqlite3.connect(db)
        cursor = conn.cursor()
        # Запрос для получения статуса по user_id
        get_status_query = f'''
@@ -163,7 +163,7 @@ def get_users_data_as_dict(group_id):
     if group_id == -220670949:
         table = "chlb_users" 
 
-    conn = sqlite3.connect('subscriptions.db')
+    conn = sqlite3.connect(db)
     cursor = conn.cursor()
 
     select_users_query = f'''
@@ -182,7 +182,7 @@ def get_users_data_as_dict(group_id):
 
 #созданию соединения (не используется в коде)
 def create_connection():
-    connection = sqlite3.connect('subscriptions.db')
+    connection = sqlite3.connect(db)
     cursor = connection.cursor()
 
     # Создаем таблицу для хранения подписок пользователей, если она не существует
