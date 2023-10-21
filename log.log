@@ -1,0 +1,59 @@
+2023-10-21 13:53:37,393 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 13:53:37,577 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 13:53:37,584 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 13:53:47,450 - tg_bot.functions.wrapping.wrapping - ERROR - Ошибка получения баланса: status code - 404
+2023-10-21 13:56:38,579 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 13:56:38,781 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 13:56:38,787 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 13:57:28,272 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 13:57:28,410 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 13:57:28,417 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:01:02,918 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:01:03,070 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:01:03,077 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:03:22,312 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:03:22,447 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:03:22,452 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:04:23,782 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:04:23,933 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:04:23,939 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:05:23,553 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:05:23,685 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:05:23,691 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:05:39,883 - tg_bot.functions.wrapping.wrapping - ERROR - Не удалось создать ордер накрутки: neworder.error.min_quantity
+2023-10-21 14:10:48,657 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:10:48,818 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:10:48,824 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:11:22,195 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:11:22,351 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:11:22,357 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:11:36,668 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:11:36,805 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:11:36,811 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:23:24,918 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:23:25,076 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:23:25,083 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:27:02,761 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:27:02,939 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:27:02,945 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:28:01,567 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:28:01,725 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:28:01,731 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:28:35,025 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:28:35,162 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:28:35,168 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:30:49,219 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:30:49,376 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:30:49,382 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:31:36,536 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:31:36,774 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:31:36,780 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:33:04,615 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:33:04,799 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:33:04,805 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:33:55,593 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:33:55,737 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:33:55,744 - aiogram.dispatcher.dispatcher - INFO - Start polling.
+2023-10-21 14:35:24,978 - aiogram - INFO - Bot: test [@wallseytestbot]
+2023-10-21 14:35:25,132 - aiogram - WARNING - Updates were skipped successfully.
+2023-10-21 14:35:25,138 - aiogram.dispatcher.dispatcher - INFO - Start polling.

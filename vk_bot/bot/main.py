@@ -6,17 +6,17 @@ from misc.config import GROUPKZN_ID, API_TOKEN
 from .events_handler import *
 from database import sql
 
+vk_session = vk_api.VkApi(token=API_TOKEN["vk"])
+longpoll = VkBotLongPoll(vk_session, GROUPKZN_ID)
+vk = vk_session.get_api()
+
 def init():
     sql.create_connection()
 
 
 def start_bot():
 
-    init()
-
-    vk_session = vk_api.VkApi(token=API_TOKEN["vk"])
-    longpoll = VkBotLongPoll(vk_session, GROUPKZN_ID)  
-    vk = vk_session.get_api()
+    init() 
 
     print("Соединение установлено")
 

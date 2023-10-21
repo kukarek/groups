@@ -4,7 +4,6 @@ from ..functions import wrapping
 from misc.config import GROUPCHLB_ID, GROUPCHLB_LINK, GROUPKZN_ID, GROUPKZN_LINK
 from aiogram.types import Message
 
-
 async def on_start(message: Message):
 
     await message.answer("Привет! Я бот. Напиши мне что-нибудь!")
@@ -113,3 +112,4 @@ async def echo(message: Message):
 
     except Exception as e: 
         await message.answer(e)
+

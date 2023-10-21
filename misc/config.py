@@ -17,7 +17,7 @@ GROUPCHLB_LINK = "https://vk.com/search?c%5Bper_page%5D=40&c%5Bq%5D=%D1%80%D0%B0
 #админ вк для уведомления
 ADMINS = [732405775]
 
-
+TG_ADMIN = 1020541698
 
 #правила размещения
 RULES_LINK = "https://vk.com//@rabotakazank-vakans"
