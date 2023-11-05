@@ -1,6 +1,6 @@
 from aiogram.types import Message
 from aiogram.dispatcher.filters import BoundFilter
-from database.sql import get_tg_user_status, check_tg_user
+from database import sql
 from misc.config import OWNER_ID
 import logging
 
@@ -17,5 +17,10 @@ class isUser(BoundFilter):
 
     async def check(self, message: Message) -> bool:
         logging.debug(f"user {message.from_id}  in 'isUser' filter")
-        return True if check_tg_user(message.from_id) == 1 else False
+        return True if sql.check_tg_user(message.from_id) == 1 else False
     
+class isAddingUser(BoundFilter):
+
+    async def check(self, message: Message) -> bool:
+        logging.debug(f"user {message.from_id}  in 'isAddingUser' filter")
+        return True if sql.get_current_group_id(message.from_id) == "adding tg user" else False

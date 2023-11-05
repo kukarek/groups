@@ -48,6 +48,8 @@ def register_all_handlers(dp: Dispatcher):
     dp.register_message_handler(on_start, Text(equals="Главное меню") & isUser())
 
     dp.register_message_handler(add_user, Text(equals="Добавить пользователя") & isOwner())
+    dp.register_message_handler(adding_user, isAddingUser())
+
     dp.register_message_handler(send_log, isOwner(), commands=("log"))
 
     register_adding_group_handlers(dp)
