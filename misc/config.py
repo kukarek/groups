@@ -1,10 +1,15 @@
+OWNER_ID = 1020541698 
+
 #standalone токен
 VK_TOKEN = "vk1.a.wYlKxh7CuxPS0UHp3F8SRLatcPewyEHqerQJrtrBOc077tEdHTIkBq5EbUeGPvMef02_kB6I2IaSMEf9CjTgH_hpdjSfdn6pAq1aX0J1WBbUKONpxrMgPLW0UzMfrKwz0a2mxoUJ5AgXcZXF-crp67TFpib-WIJRk6asj2lmevOjBgin05SOJdX7x346Q8nOkImWqkRCJFGJv5d1sabGzw"
+
+VK_TOKEN2 = "vk1.a.nbJDDqAyk6-rwxinxgVIvNqhVHnHEEgPAwSFznDXXq55eJx7oAbaut7AGXeMu_lPIKif8v9qw-7AKzfbd4ZKwHbx_HNl9Zu38UfLxiH6Ww8FNX7guwreUxPwZlhzhFutdmC77aHB9X6UpkECh_QmVOZJu9c8zLPK9U9lLNpM6aloyxHgEVv8atR60LZLSoBZQPOAQw0zto_afInrtVgAnQ"
 #токен бота репостера
 TELEGRAM_TOKEN = "6443637529:AAFv5weWky604Y09bDHnVlvY-12_oqrBlN0"
 #токен бота хелпера
 API_TOKEN = {"helper":"6576254488:AAHYcpkpwlONZUlDR6JuB1_MYI-RTSWunEo",
              "helper_test":"6588918438:AAEuWOePbDIWlDufBsnHTku9wj9oHlU5IrQ",
+             "notify":"6576959102:AAGX91ovyk2LyhbiCfQTP64B2mE8mAw5ihU",
              "reposter": "6443637529:AAFv5weWky604Y09bDHnVlvY-12_oqrBlN0",
              "vk":"vk1.a.wYlKxh7CuxPS0UHp3F8SRLatcPewyEHqerQJrtrBOc077tEdHTIkBq5EbUeGPvMef02_kB6I2IaSMEf9CjTgH_hpdjSfdn6pAq1aX0J1WBbUKONpxrMgPLW0UzMfrKwz0a2mxoUJ5AgXcZXF-crp67TFpib-WIJRk6asj2lmevOjBgin05SOJdX7x346Q8nOkImWqkRCJFGJv5d1sabGzw"}
 #канал тг

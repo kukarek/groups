@@ -1,0 +1,1 @@
+from .group_handlers import register_group_handlers

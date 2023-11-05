@@ -1,9 +1,7 @@
-2023-10-28 00:54:23,056 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 00:54:23,061 - modules.vk_bot.bot.main - INFO - SUCCESS CONNECTION (vk_bot)
-2023-10-28 00:54:23,692 - aiogram - WARNING - Updates were skipped successfully.
-2023-10-28 00:54:23,703 - modules.tg_bot.bot.main - DEBUG - Все модули зарегестрированы!
-2023-10-28 00:55:09,446 - asyncio - ERROR - Task exception was never retrieved
-future: <Task finished name='Task-11' coro=<Dispatcher._process_polling_updates() done, defined at C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\aiogram\dispatcher\dispatcher.py:407> exception=TypeError("answer_document() got an unexpected keyword argument 'chat_id'")>
+2023-11-03 18:29:23,033 - rabotakazank - INFO - SUCCESS CONNECTION BOT rabotakazank
+2023-11-03 18:34:12,156 - rabotakazank - INFO - SUCCESS CONNECTION BOT rabotakazank
+2023-11-03 18:50:56,287 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-27' coro=<Dispatcher._process_polling_updates() done, defined at C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\aiogram\dispatcher\dispatcher.py:407> exception=MissingSchema("Invalid URL 'https:/vk.com/photo-22156807_457244649': No schema supplied. Perhaps you meant http://https:/vk.com/photo-22156807_457244649?")>
 Traceback (most recent call last):
   File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 415, in _process_polling_updates
     for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
@@ -15,79 +13,36 @@ Traceback (most recent call last):
     return await self.message_handlers.notify(update.message)
   File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\aiogram\dispatcher\handler.py", line 117, in notify
     response = await handler_obj.handler(*args, **partial_data)
-  File "c:\Users\Dmitry\Documents\Git\groups\modules\tg_bot\bot\handlers.py", line 125, in send_log
-    await message.answer_document(chat_id=message.from_id, document=log_file)
-TypeError: answer_document() got an unexpected keyword argument 'chat_id'
-2023-10-28 00:55:57,945 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 00:55:57,951 - modules.vk_bot.bot.main - INFO - SUCCESS CONNECTION (vk_bot)
-2023-10-28 00:55:58,718 - aiogram - WARNING - Updates were skipped successfully.
-2023-10-28 00:55:58,729 - modules.tg_bot.bot.main - DEBUG - Все модули зарегестрированы!
-2023-10-28 00:56:46,808 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 00:56:46,928 - root - DEBUG - handling message 'Реквизиты' from 'Дима Эмирсалиев' with status 'applicant' 
-2023-10-28 00:56:47,431 - root - DEBUG - sending answer 'Выберите действие на клавиатуре:' with keyboard for 'Дима Эмирсалиев' 
-2023-10-28 00:56:48,100 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 00:56:48,469 - root - DEBUG - handling message 'Главное меню' from 'Дима Эмирсалиев' with status 'applicant' 
-2023-10-28 00:56:48,968 - root - DEBUG - sending answer 'Выберите на клавиатуре, вы хотите разместить вакансию или ищете работу?' with keyboard for 'Дима Эмирсалиев' 
-2023-10-28 00:56:52,423 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 00:56:52,876 - root - DEBUG - handling message 'Ищу работу' from 'Дима Эмирсалиев' with status 'start' 
-2023-10-28 00:56:53,361 - root - DEBUG - sending answer 'Выберите действие на клавиатуре:' with keyboard for 'Дима Эмирсалиев' 
-2023-10-28 00:56:57,057 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 00:56:57,143 - root - DEBUG - handling message 'Добавить ключевые слова' from 'Дима Эмирсалиев' with status 'applicant' 
-2023-10-28 00:56:57,606 - root - DEBUG - sending answer 'Отправьте ключевые слова через запятую' with keyboard for 'Дима Эмирсалиев' 
-2023-10-28 00:57:01,723 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 00:57:01,825 - root - DEBUG - handling message 'тест' from 'Дима Эмирсалиев' with status 'editing' 
-2023-10-28 00:57:02,332 - root - DEBUG - sending answer 'Подписка по вашим ключевым словам - активна!' with keyboard for 'Дима Эмирсалиев' 
-2023-10-28 00:57:26,520 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 00:57:26,530 - root - DEBUG - sending post without photo to telegram
-2023-10-28 00:57:27,571 - root - DEBUG - finding users with matching keywords
-2023-10-28 00:57:27,571 - root - DEBUG - sending wallpost to users (1) with matching keywords
-2023-10-28 00:57:27,571 - root - DEBUG - sending wallpost to user {'user_id': 732405775, 'keywords': 'тест'}
-2023-10-28 00:57:27,744 - modules.vk_bot.bot.events_handler - ERROR - [100] One of the parameters specified was missing or invalid: user_id not integer
-2023-10-28 00:58:35,753 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 00:58:35,856 - root - DEBUG - handling message '1' from 'Дима Эмирсалиев' with status 'applicant' 
-2023-10-28 00:58:36,314 - root - DEBUG - sending answer 'Выберите действие на клавиатуре:' with keyboard for 'Дима Эмирсалиев' 
-2023-10-28 00:58:47,230 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 00:58:47,240 - root - DEBUG - sending post without photo to telegram
-2023-10-28 00:58:47,941 - root - DEBUG - finding users with matching keywords
-2023-10-28 00:58:47,941 - root - DEBUG - sending wallpost to users (1) with matching keywords
-2023-10-28 00:58:47,941 - root - DEBUG - sending wallpost to user {'user_id': 732405775, 'keywords': 'тест'}
-2023-10-28 00:58:48,044 - modules.vk_bot.bot.events_handler - ERROR - [100] One of the parameters specified was missing or invalid: user_id not integer
-2023-10-28 00:59:13,697 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 00:59:16,639 - root - DEBUG - sending post without photo to telegram
-2023-10-28 00:59:22,486 - root - DEBUG - finding users with matching keywords
-2023-10-28 00:59:22,486 - root - DEBUG - sending wallpost to users (1) with matching keywords
-2023-10-28 00:59:22,486 - root - DEBUG - sending wallpost to user {'user_id': 732405775, 'keywords': 'тест'}
-2023-10-28 00:59:22,570 - modules.vk_bot.bot.events_handler - ERROR - [100] One of the parameters specified was missing or invalid: user_id not integer
-2023-10-28 01:00:00,796 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 01:00:00,806 - root - DEBUG - sending post without photo to telegram
-2023-10-28 01:00:01,901 - root - DEBUG - finding users with matching keywords
-2023-10-28 01:00:15,368 - root - DEBUG - sending wallpost to users (1) with matching keywords
-2023-10-28 01:00:17,446 - root - DEBUG - sending wallpost to user {'user_id': 732405775, 'keywords': 'тест'}
-2023-10-28 01:01:02,084 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 01:01:02,088 - modules.vk_bot.bot.main - INFO - SUCCESS CONNECTION (vk_bot)
-2023-10-28 01:01:02,912 - aiogram - WARNING - Updates were skipped successfully.
-2023-10-28 01:01:02,924 - modules.tg_bot.bot.main - DEBUG - Все модули зарегестрированы!
-2023-10-28 01:01:24,602 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 01:01:24,613 - root - DEBUG - sending post without photo to telegram
-2023-10-28 01:01:25,454 - root - DEBUG - finding users with matching keywords
-2023-10-28 01:01:25,456 - root - DEBUG - sending wallpost to users (1) with matching keywords
-2023-10-28 01:01:25,456 - root - DEBUG - sending wallpost to user {'user_id': 732405775, 'keywords': 'тест'}
-2023-10-28 01:01:25,686 - modules.vk_bot.bot.events_handler - ERROR - object int can't be used in 'await' expression
-2023-10-28 01:02:29,232 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 01:02:29,242 - root - DEBUG - sending post without photo to telegram
-2023-10-28 01:02:30,126 - root - DEBUG - finding users with matching keywords
-2023-10-28 01:02:30,126 - root - DEBUG - sending wallpost to users (1) with matching keywords
-2023-10-28 01:02:30,126 - root - DEBUG - sending wallpost to user {'user_id': 732405775, 'keywords': 'тест'}
-2023-10-28 01:04:28,424 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 01:04:28,430 - modules.vk_bot.bot.main - INFO - SUCCESS CONNECTION (vk_bot)
-2023-10-28 01:04:29,403 - aiogram - WARNING - Updates were skipped successfully.
-2023-10-28 01:04:29,414 - modules.tg_bot.bot.main - DEBUG - Все модули зарегестрированы!
-2023-10-28 01:04:50,667 - asyncio - DEBUG - Using proactor: IocpProactor
-2023-10-28 01:04:50,677 - root - DEBUG - sending post without photo to telegram
-2023-10-28 01:04:51,556 - root - DEBUG - finding users with matching keywords
-2023-10-28 01:04:51,556 - root - DEBUG - sending wallpost to users (1) with matching keywords
-2023-10-28 01:04:51,557 - root - DEBUG - sending wallpost to user {'user_id': 732405775, 'keywords': 'тест'}
-2023-10-28 01:10:34,805 - asyncio - DEBUG - Using selector: EpollSelector
-2023-10-28 01:10:34,859 - modules.vk_bot.bot.main - INFO - SUCCESS CONNECTION (vk_bot)
-2023-10-28 01:10:35,138 - aiogram - WARNING - Updates were skipped successfully.
-2023-10-28 01:10:35,337 - modules.tg_bot.bot.main - DEBUG - Все модули зарегестрированы!
+  File "c:\Users\Dmitry\Documents\Git\new_groups\helper_bot\handlers\group_handlers\delay\handlers\handlers.py", line 173, in editing_default_photo
+    if group.set_default_photo(message.text):
+  File "c:\Users\Dmitry\Documents\Git\new_groups\helper_bot\group\modules\delay\delay.py", line 32, in set_default_photo
+    response = requests.get(url=f"https:/vk.com/{photo}")
+  File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\requests\api.py", line 75, in get
+    return request('get', url, params=params, **kwargs)
+  File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\requests\api.py", line 61, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\requests\sessions.py", line 528, in request
+    prep = self.prepare_request(req)
+  File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\requests\sessions.py", line 456, in prepare_request
+    p.prepare(
+  File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\requests\models.py", line 316, in prepare
+    self.prepare_url(url, params)
+  File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\requests\models.py", line 390, in prepare_url
+    raise MissingSchema(error)
+requests.exceptions.MissingSchema: Invalid URL 'https:/vk.com/photo-22156807_457244649': No schema supplied. Perhaps you meant http://https:/vk.com/photo-22156807_457244649?
+2023-11-03 19:14:39,071 - asyncio - ERROR - Task exception was never retrieved
+future: <Task finished name='Task-37' coro=<Dispatcher._process_polling_updates() done, defined at C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\aiogram\dispatcher\dispatcher.py:407> exception=AttributeError("'Group' object has no attribute 'set_logger'")>
+Traceback (most recent call last):
+  File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 415, in _process_polling_updates
+    for responses in itertools.chain.from_iterable(await self.process_updates(updates, fast)):
+  File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 235, in process_updates
+    return await asyncio.gather(*tasks)
+  File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\aiogram\dispatcher\handler.py", line 117, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\aiogram\dispatcher\dispatcher.py", line 256, in process_update
+    return await self.message_handlers.notify(update.message)
+  File "C:\Users\Dmitry\AppData\Local\Programs\Python\Python39\lib\site-packages\aiogram\dispatcher\handler.py", line 117, in notify
+    response = await handler_obj.handler(*args, **partial_data)
+  File "c:\Users\Dmitry\Documents\Git\new_groups\helper_bot\handlers\addind_group\handlers\handlers.py", line 83, in adding_vk_admin
+    group.set_logger(message.bot)
+AttributeError: 'Group' object has no attribute 'set_logger'
