@@ -59,7 +59,7 @@ async def editing_rules_link(message: Message):
     sql.set_tg_user_status(message.from_id, "None")
     group = server.get_group(sql.get_current_group_id(message.from_id))
     group.RULES_LINK = message.text
-
+    sql.set_group_value(group.GROUP_ID, "rules_link", message.text)
     await message.answer("Ссылка изменена!", reply_markup=group_parameters_keyboard(message.from_id))
 
 async def edit_example_words(message: Message):
@@ -73,7 +73,7 @@ async def editing_example_words(message: Message):
     sql.set_tg_user_status(message.from_id, "None")
     group = server.get_group(sql.get_current_group_id(message.from_id))
     group.EXAMPLE_WORDS = message.text
-
+    sql.set_group_value(group.GROUP_ID, "example_words", message.text)
     await message.answer("Слова изменены!", reply_markup=group_parameters_keyboard(message.from_id))
 
 async def edit_search_words(message: Message):
@@ -101,7 +101,7 @@ async def editing_payment(message: Message):
     sql.set_tg_user_status(message.from_id, "None")
     group = server.get_group(sql.get_current_group_id(message.from_id))
     group.PAYMENT = message.text
-
+    sql.set_group_value(group.GROUP_ID, "payment", message.text)
     await message.answer("Реквизиты изменены!", reply_markup=group_parameters_keyboard(message.from_id))
 
 def register_group_param_handlers(dp: Dispatcher):

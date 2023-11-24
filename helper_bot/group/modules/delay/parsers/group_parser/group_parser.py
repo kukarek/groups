@@ -5,10 +5,10 @@ from ..post import Post
 import random
 import datetime
 
-class Channel_Parser():
+class Group_Parser():
 
     def __init__(self, channel: str, logg, default_photo = None) -> None:
-        self.key = "Channel_Parser"
+        self.key = "Group_Parser"
         self.resource = self.create_link(channel)
         self.logg = logg
         self.default_photo = default_photo
@@ -102,30 +102,3 @@ class Channel_Parser():
                     self.logg.info(e)
         else:
             self.logg.error(f"Не удалось выполнить запрос к {self.resource}, код {response.status_code} ")
-    
-    """
-    def load_image(self, link):
-
-        #загрузка фото 
-        response = requests.get(link)
-
-        if response.status_code == 200:
-            
-            #получение данных из ответа
-            image_data = io.BytesIO(response.content)
-
-            # Инициализация сессии ВКонтакте
-            session = vk_api.VkApi(token=GROUPKZN_ID)
-            vk = session.get_api()
-
-            # Загрузка фотографии в альбом группы
-            upload = vk_api.VkUpload(vk)
-            photo = upload.photo(photos=image_data, group_id=GROUPKZN_ID, album_id=234078005)
-
-            # Получение информации о загруженной фотографии
-            photo_info = photo[0]
-
-        
-        return photo_info
-    """
-

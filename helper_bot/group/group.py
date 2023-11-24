@@ -30,6 +30,7 @@ class Group(Bot, Modules):
         if data["payment"]:
             self.PAYMENT = data["payment"]
 
+        self.init()
         sql.create_group_users_table(self.GROUP_ID)
 
     def start(self):

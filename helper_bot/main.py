@@ -11,7 +11,7 @@ main_logger = logging.getLogger("main_log")
 
 async def init(dp: Dispatcher):
 
-    log.init("INFO")
+    log.init("DEBUG")
     sql.create_connection()
     
     server.groups_init()

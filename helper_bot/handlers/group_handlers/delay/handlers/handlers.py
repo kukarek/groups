@@ -137,7 +137,8 @@ async def removing_parser(message: Message):
 
     logging.debug(f"user {message.from_id} join in 'removing_parser' function")
     sql.set_tg_user_status(message.from_id, "None")
-    remove_parser(message.text)
+    group = server.get_group(sql.get_current_group_id(message.from_id))
+    group.remove_parser(message.text)
     await message.answer("Парсер удален!", reply_markup=editing_parsers_keyboard())
 
 async def cancel(message: Message):

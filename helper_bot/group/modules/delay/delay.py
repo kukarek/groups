@@ -3,9 +3,8 @@ import vk_api
 from datetime import datetime, timedelta, date
 import random
 from .parsers.channel_parser import Channel_Parser
+from .parsers.group_parser import Group_Parser
 import requests
-
-
 
 class Delay():
 
@@ -50,6 +49,11 @@ class Delay():
 
         parser = Channel_Parser(channel_link, self.logg, self.DEFAULT_POST_PHOTO)
         self.parsers.append(parser)
+
+    def add_group_parser(self, channel_link):
+
+        parser = Group_Parser(channel_link, self.logg, self.DEFAULT_POST_PHOTO)
+        self.parsers.append(parser)
     
     def remove_parser(self, parser_link):
 
@@ -75,24 +79,38 @@ class Delay():
 
         self.posts.clear()
 
-    def make_def(self):
-
-        self.set_random_time()
+    def make_def(self) -> bool:
 
         vk_session = vk_api.VkApi(token=self.VK_TOKEN_FOR_DELAY)
         vk = vk_session.get_api()
 
-        for post in self.posts:
-            try:
-                if post.image:
-                    vk.wall.post(owner_id=f"-{self.GROUP_ID}", message=post.text, attachments=post.image, publish_date=post.datetime)
-                else:
-                    vk.wall.post(owner_id=f"-{self.GROUP_ID}", message=post.text, publish_date=post.datetime)    
-            except Exception as e:
-                self.logg.critical(e)
+        try: 
+            for post in self.posts:
+            
+                while True:
+                
+                    #если на это время уже стоит пост, пробуем другое время
+                    self.set_random_time(post)
+                    if self.make_post_in_def(vk, post):
+                        break 
+            return True
+        
+        except Exception as e:
+            self.logg.error(e)
+            return False   
+
+    def make_post_in_def(self, vk, post) -> bool:
+
+        try:
+            vk.wall.post(owner_id=f"-{self.GROUP_ID}", message=post.text, publish_date=post.datetime, attachments=post.image)  
+            return True
+        
+        except Exception as e:
+            
+            if e.code == 214:
                 return False
-    
-        return True
+            else:
+                raise e
 
     def tomorrow_date(self) -> str:
 
@@ -114,15 +132,13 @@ class Delay():
 
         return unix_timestamp
 
-    def set_random_time(self):
+    def set_random_time(self, post):
 
-        for post in self.posts:
+        hour = random.randint(self.start_hour, self.end_hour) * 60 * 60
+        minute = random.randint(0, 59) * 60
+        unix_timestamp = self.get_unix_timestamp() + hour + minute
 
-            hour = random.randint(self.start_hour, self.end_hour) * 60 * 60
-            minute = random.randint(0, 59) * 60
-            unix_timestamp = self.get_unix_timestamp() + hour + minute
-
-            post.set_time(unix_timestamp)
+        post.set_time(unix_timestamp)
 
     def get_unix_timestamp(self):
 

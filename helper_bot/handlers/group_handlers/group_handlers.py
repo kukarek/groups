@@ -17,7 +17,7 @@ async def group_hand(message: Message):
     for group in server.groups:
         if group.GROUP_NAME == message.text or group.GROUP_ID == int(sql.get_current_group_id(message.from_id)):
             sql.set_current_group(message.from_id, group.GROUP_ID)
-
+            sql.set_tg_user_status(message.from_id, "None")
             await message.answer(f"Управление группой", reply_markup=group_start_keyboard(group))
     
 async def start_chat_bot(message: Message):
